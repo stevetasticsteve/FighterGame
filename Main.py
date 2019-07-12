@@ -18,6 +18,7 @@ FPS_clock = pygame.time.Clock()
 window = pygame.display.set_mode((Window_width, Window_height))
 pygame.display.set_caption('Fighter game')
 pygame.key.set_repeat(10)
+plane = pygame.image.load('Assets/Sprites/Plane.png')
 
 
 class player:
@@ -29,7 +30,8 @@ class player:
         self.speed = 10
 
     def draw(self):
-        pygame.draw.circle(window, self.player_colour, (self.x, self.y), self.player_size)
+        # pygame.draw.circle(window, self.player_colour, (self.x, self.y), self.player_size)
+        window.blit(plane, (self.x, self.y))
 
     def move(self,x ,y):
         self.x += x * self.speed
