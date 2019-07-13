@@ -1,25 +1,16 @@
 import pygame
 import sys
 import MapGenerator
+import Entities
 
 FPS = 30
 Window_width = 800
 Window_height = 600
+x_center = int(Window_width / 2)
+y_center = int(Window_height / 2)
 
-class Player:
-    def __init__(self):
-        self.player_size = 10
-        self.player_colour = colours['White']
-        self.x = player_start_x
-        self.y = player_start_y
-        self.speed = 10
-
-    def draw(self):
-        window.blit(plane, (self.x, self.y))
-
-    def move(self, x, y):
-        self.x += x * self.speed
-        self.y += y * self.speed
+colours = {'White': (255, 255, 255),
+           'Black': (0, 0, 0)}
 
 
 def reset_screen(map):
@@ -53,28 +44,19 @@ def game_loop():
                     close_program()
 
         reset_screen(map)
-        Player.draw()
+        window.blit(Player.sprite, (Player.x, Player.y))
         pygame.display.update()
         FPS_clock.tick(FPS)
 
 
 if __name__ == '__main__':
-    x_center = int(Window_width / 2)
-    y_center = int(Window_height / 2)
-
-    player_start_x = x_center
-    player_start_y = y_center
-
-    colours = {'White': (255, 255, 255),
-               'Black': (0, 0, 0)}
 
     pygame.init()
     FPS_clock = pygame.time.Clock()
     window = pygame.display.set_mode((Window_width, Window_height))
     pygame.display.set_caption('Fighter game')
     pygame.key.set_repeat(10)
-    plane = pygame.image.load('Assets/Sprites/Plane.png')
     map = MapGenerator.map()
 
-    Player = Player()
+    Player = Entities.Player((100,100))
     game_loop()
