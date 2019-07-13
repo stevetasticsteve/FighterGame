@@ -15,8 +15,8 @@ colours = {'White': (255, 255, 255),
 
 def reset_screen(map):
     window.fill(colours['Black'])
-    tile = pygame.image.load(map.tile_map[(0,0)])
-    window.blit(tile, (0,0))
+    for tile in map.tile_map:
+        window.blit(pygame.image.load(tile[1]), tile[0])
 
 
 def close_program():
