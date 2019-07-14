@@ -6,8 +6,6 @@ import Entities
 FPS = 30
 Window_width = 800
 Window_height = 600
-x_center = int(Window_width / 2)
-y_center = int(Window_height / 2)
 
 colours = {'White': (255, 255, 255),
            'Black': (0, 0, 0)}
@@ -33,18 +31,20 @@ def game_loop():
             # Key bindings
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_UP:
-                    Player.move(0, -1)
+                    Player.accelerate(1)
                 if event.key == pygame.K_DOWN:
-                    Player.move(0, 1)
+                    Player.accelerate(-1)
                 if event.key == pygame.K_LEFT:
-                    Player.move(-1, 0)
+                    Player.rotate(-1)
                 if event.key == pygame.K_RIGHT:
-                    Player.move(1, 0)
+                    Player.rotate(1)
                 if event.key == pygame.K_ESCAPE:
                     close_program()
 
+        Player.move()
         reset_screen(map)
-        window.blit(Player.sprite, (Player.x, Player.y))
+        player_sprite = pygame.transform.rotate(Player.sprite, Player.angle * -1)
+        window.blit(player_sprite, (Player.x, Player.y))
         pygame.display.update()
         FPS_clock.tick(FPS)
 
@@ -55,8 +55,8 @@ if __name__ == '__main__':
     FPS_clock = pygame.time.Clock()
     window = pygame.display.set_mode((Window_width, Window_height))
     pygame.display.set_caption('Fighter game')
-    pygame.key.set_repeat(10)
+    pygame.key.set_repeat(10) # Enables direction button to be held
     map = MapGenerator.map()
 
-    Player = Entities.Player((100,100))
+    Player = Entities.Player((100,100,90))
     game_loop()
