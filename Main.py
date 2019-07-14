@@ -5,7 +5,7 @@ import Entities
 
 FPS = 30
 window_size = (800,600)
-map_size = (800,600)
+map_size = (8000,6000)
 player_start = (100,100)
 colours = {'White': (255, 255, 255),
            'Black': (0, 0, 0)}
@@ -18,7 +18,10 @@ def reset_screen(map):
     Camera.Move()
     background = Camera.Active_tiles()
     for tile in background:
-        window.blit(pygame.image.load(tile[1]), tile[0])
+        screen_x = tile[0][0] - Camera.rect[0]
+        screen_y = tile[0][1] - Camera.rect[1]
+        screen_coord = (screen_x, screen_y)
+        window.blit(pygame.image.load(tile[1]), screen_coord)
 
 
 def close_program():
@@ -48,7 +51,8 @@ def game_loop():
         Player.move()
         reset_screen(map)
         player_sprite = pygame.transform.rotate(Player.sprite, Player.angle * -1)
-        window.blit(player_sprite, (Player.x, Player.y))
+        window.blit(player_sprite, (int(window_size[0] / 2), int(window_size[1] / 2)))
+        # window.blit(player_sprite, (Player.x, Player.y))
         pygame.display.update()
         FPS_clock.tick(FPS)
 

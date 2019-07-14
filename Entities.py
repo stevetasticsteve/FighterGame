@@ -19,8 +19,8 @@ class Camera:
         # and within the range of the camera
         active_tiles = []
         for tile in self.map.tile_map:
-            if tile[0][0] in range(self.rect[0], self.rect[2]):
-                if tile[0][1]in range(self.rect[1], self.rect[3]):
+            if tile[0][0] in range(self.rect[0]-64, self.rect[2]+64):
+                if tile[0][1]in range(self.rect[1]-64, self.rect[3]+64):
                     active_tiles.append(tile)
         return active_tiles
 
