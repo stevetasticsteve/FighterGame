@@ -17,5 +17,6 @@ class map:
                 self.tile_map.append((tile_coordinate, pygame.image.load(tile)))
 
     def select_tile(self):
+        #TODO draw more terrain tiles and come up with code to arrange semi - not totally randomly
         tile = random.choice(self.tiles)
         return tile

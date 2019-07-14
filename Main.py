@@ -5,7 +5,7 @@ import Entities
 
 FPS = 30
 window_size = (800,600)
-map_size = (8000,6000)
+map_size = (10000,8000)
 player_start = (100,100)
 colours = {'White': (255, 255, 255),
            'Black': (0, 0, 0)}
@@ -24,6 +24,7 @@ def reset_screen(map):
         screen_coord = (screen_x, screen_y)
         window.blit(tile[1], screen_coord)
 
+#TODO create a loading screen so the long pause at the start as images load to memory isn't though of as a bug
 
 def close_program():
     pygame.quit()
@@ -63,7 +64,7 @@ if __name__ == '__main__':
     pygame.init()
     FPS_clock = pygame.time.Clock()
     window = pygame.display.set_mode(window_size)
-    pygame.display.set_caption('Fighter game')
+    pygame.display.set_caption('Flyover')
     pygame.key.set_repeat(10) # Enables direction button to be held
     map = MapGenerator.map(map_size)
     Player = Entities.Player((int(window_size[0]/2),int(window_size[1]/2),90))

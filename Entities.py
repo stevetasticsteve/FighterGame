@@ -2,6 +2,7 @@ import pygame
 import math
 
 class Camera:
+    #TODO figure out how to handle map edges and decide on reasonable map size
     def __init__(self, player, window_size, map):
         self.camera_width = window_size[0]
         self.camera_height = window_size[1]
@@ -25,7 +26,8 @@ class Camera:
         return active_tiles
 
 
-class Jet:
+class Jet: #TODO planes can fly backwards, move some Player methods to parent class
+    #TODO planes can fly too fast!
     def __init__(self, starting_coordinates):
         self.x = starting_coordinates[0]
         self.y = starting_coordinates[1]
