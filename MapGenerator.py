@@ -2,10 +2,10 @@ import os
 import random
 
 class map:
-    def __init__(self):
+    def __init__(self, map_width, map_height):
         self.tile_size = 64
-        self.map_width = 800
-        self.map_height = 600
+        self.map_width = map_width
+        self.map_height = map_height
         self.tiles = ['Assets/Tiles/' + x for x in os.listdir('Assets/Tiles') if x.endswith('.png')]
 
         self.tile_map = []

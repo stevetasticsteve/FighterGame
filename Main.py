@@ -6,6 +6,8 @@ import Entities
 FPS = 30
 Window_width = 800
 Window_height = 600
+map_width = 1000
+map_height = 2000
 
 colours = {'White': (255, 255, 255),
            'Black': (0, 0, 0)}
@@ -56,7 +58,7 @@ if __name__ == '__main__':
     window = pygame.display.set_mode((Window_width, Window_height))
     pygame.display.set_caption('Fighter game')
     pygame.key.set_repeat(10) # Enables direction button to be held
-    map = MapGenerator.map()
+    map = MapGenerator.map(map_width, map_height)
 
     Player = Entities.Player((100,100,90))
     game_loop()
