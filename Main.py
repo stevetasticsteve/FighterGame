@@ -18,10 +18,11 @@ def reset_screen(map):
     Camera.Move()
     background = Camera.Active_tiles()
     for tile in background:
+        # Need to turn game coordinates into screen coordinates relative to the player
         screen_x = tile[0][0] - Camera.rect[0]
         screen_y = tile[0][1] - Camera.rect[1]
         screen_coord = (screen_x, screen_y)
-        window.blit(pygame.image.load(tile[1]), screen_coord)
+        window.blit(tile[1], screen_coord)
 
 
 def close_program():

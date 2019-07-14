@@ -1,5 +1,6 @@
 import os
 import random
+import pygame
 
 class map:
     def __init__(self, map_size):
@@ -13,7 +14,7 @@ class map:
             for row in range(0, self.map_height, self.tile_size):
                 tile_coordinate = (column, row)
                 tile = self.select_tile()
-                self.tile_map.append((tile_coordinate, tile))
+                self.tile_map.append((tile_coordinate, pygame.image.load(tile)))
 
     def select_tile(self):
         tile = random.choice(self.tiles)
