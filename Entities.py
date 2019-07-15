@@ -1,5 +1,6 @@
 import pygame
 import math
+import random
 
 class Camera:
     #TODO figure out how to handle map edges and decide on reasonable map size
@@ -68,3 +69,28 @@ class Player(Jet):
         print('Speed = ' + str(self.speed))
         print('Direction = ' + str(self.angle) + ' degrees')
 
+
+class Enemy(Jet):
+    def __init__(self, starting_coordinates):
+        Jet.__init__(self, starting_coordinates)
+        self.sprite = pygame.image.load('Assets/Sprites/Plane.png')
+        self.behaviours = (self.turn_left,self.turn_right, self.do_nothing)
+        self.speed = 2
+
+    def choose_behaviour(self):
+        behaviour =  random.choice(self.behaviours)
+        behaviour()
+
+    def turn_left(self):
+        self.rotate(-1)
+
+    def turn_right(self):
+        self.rotate(1)
+
+    def do_nothing(self):
+        pass
+
+    def within_active_area(self, Camera):
+        if self.x in range (Camera.rect[0], Camera.rect[2]):
+            if self.y in range(Camera.rect[1], Camera.rect[3]):
+                return True

@@ -20,10 +20,16 @@ def reset_screen(map):
     background = Camera.Active_tiles()
     for tile in background:
         # Need to turn game coordinates into screen coordinates relative to the player
-        screen_x = tile[0][0] - Camera.rect[0]
-        screen_y = tile[0][1] - Camera.rect[1]
-        screen_coord = (screen_x, screen_y)
+        # screen_x = tile[0][0] - Camera.rect[0]
+        # screen_y = tile[0][1] - Camera.rect[1]
+        screen_coord = convert_to_screen_coordinates((tile[0][0],tile[0][1]))
         window.blit(tile[1], screen_coord)
+
+
+def convert_to_screen_coordinates(coord):
+    screen_x = coord[0] - Camera.rect[0]
+    screen_y = coord[1] - Camera.rect[1]
+    return (screen_x, screen_y)
 
 #TODO create a loading screen so the long pause at the start as images load to memory isn't though of as a bug
 
@@ -51,13 +57,21 @@ def game_loop():
                 if event.key == pygame.K_ESCAPE:
                     close_program()
 
+        # Player update
         Player.move()
         if debug_mode:
             Player.Status()
         reset_screen(map)
         player_sprite = pygame.transform.rotate(Player.sprite, Player.angle * -1)
         window.blit(player_sprite, (int(window_size[0] / 2), int(window_size[1] / 2)))
-        # window.blit(player_sprite, (Player.x, Player.y))
+
+        # Enemy update
+        Enemy.choose_behaviour()
+        Enemy.move()
+        if Enemy.within_active_area(Camera):
+            enemy_sprite = pygame.transform.rotate(Enemy.sprite, Enemy.angle * -1)
+            window.blit(enemy_sprite, (convert_to_screen_coordinates((Enemy.x, Enemy.y))))
+        # Game update
         pygame.display.update()
         FPS_clock.tick(FPS)
 
@@ -71,5 +85,6 @@ if __name__ == '__main__':
     pygame.key.set_repeat(10) # Enables direction button to be held
     map = MapGenerator.map(map_size)
     Player = Entities.Player((int(window_size[0]/2),int(window_size[1]/2),90))
+    Enemy = Entities.Enemy((Player.x,Player.y,90))
     Camera = Entities.Camera(Player, window_size, map)
     game_loop()
