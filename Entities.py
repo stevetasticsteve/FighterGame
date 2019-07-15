@@ -76,31 +76,32 @@ class Enemy(Jet):
         self.sprite = pygame.image.load('Assets/Sprites/Plane.png')
         self.behaviours = (self.turn_left,self.turn_right, self.do_nothing)
         self.speed = 2
+        self.behaviour = self.do_nothing
         self.last_behaviour = self.do_nothing
         self.last_behaviour_time = 0
-        self.behaviour = self.do_nothing
 
     def move(self):
         super().move()
         self.last_behaviour_time += 1
 
     def choose_behaviour(self):
-        print('current behaviour: ' + str(self.behaviour))
         if self.last_behaviour == self.turn_left:
             self.behaviour = self.do_nothing
         elif self.last_behaviour == self.turn_right:
             self.behaviour = self.do_nothing
         else:
-            print('in')
             self.behaviour = random.choice(self.behaviours)
+            self.behaviour_duration = random.randint(5,30)
         self.behaviour()
         self.last_behaviour = self.behaviour
 
     def turn_left(self):
-        self.rotate(-1)
+        if self.last_behaviour_time < self.behaviour_duration:
+            self.rotate(-1)
 
     def turn_right(self):
-        self.rotate(1)
+        if self.last_behaviour_time < self.behaviour_duration:
+            self.rotate(1)
 
     def do_nothing(self):
         pass

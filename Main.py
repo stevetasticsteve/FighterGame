@@ -69,7 +69,7 @@ def game_loop():
         window.blit(player_sprite, (int(window_size[0] / 2), int(window_size[1] / 2)))
 
         # Enemy update
-        if Enemy.last_behaviour_time > FPS * enemy_behaviour_time: # if last behaviour was more than 3s ago
+        if Enemy.last_behaviour_time > FPS * enemy_behaviour_time:
             Enemy.choose_behaviour()
             Enemy.last_behaviour_time = 0
         else:
