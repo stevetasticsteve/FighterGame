@@ -2,6 +2,7 @@ import pygame
 import sys
 import MapGenerator
 import Entities
+import random
 
 FPS = 30
 window_size = (800,600)
@@ -9,7 +10,8 @@ map_size = (1000,800)
 player_start = (100,100)
 colours = {'White': (255, 255, 255),
            'Black': (0, 0, 0)}
-debug_mode = True
+debug_mode = False
+enemy_behaviour_time = 1.5
 
 
 def reset_screen(map):
@@ -27,6 +29,7 @@ def reset_screen(map):
 
 
 def convert_to_screen_coordinates(coord):
+    # takes game coordinates and converts it to screen (pixel) coordinates for blitting
     screen_x = coord[0] - Camera.rect[0]
     screen_y = coord[1] - Camera.rect[1]
     return (screen_x, screen_y)
@@ -66,7 +69,11 @@ def game_loop():
         window.blit(player_sprite, (int(window_size[0] / 2), int(window_size[1] / 2)))
 
         # Enemy update
-        Enemy.choose_behaviour()
+        if Enemy.last_behaviour_time > FPS * enemy_behaviour_time: # if last behaviour was more than 3s ago
+            Enemy.choose_behaviour()
+            Enemy.last_behaviour_time = 0
+        else:
+            Enemy.behaviour()
         Enemy.move()
         if Enemy.within_active_area(Camera):
             enemy_sprite = pygame.transform.rotate(Enemy.sprite, Enemy.angle * -1)
