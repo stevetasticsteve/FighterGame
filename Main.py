@@ -5,10 +5,11 @@ import Entities
 
 FPS = 30
 window_size = (800,600)
-map_size = (10000,8000)
+map_size = (1000,800)
 player_start = (100,100)
 colours = {'White': (255, 255, 255),
            'Black': (0, 0, 0)}
+debug_mode = True
 
 
 def reset_screen(map):
@@ -51,6 +52,8 @@ def game_loop():
                     close_program()
 
         Player.move()
+        if debug_mode:
+            Player.Status()
         reset_screen(map)
         player_sprite = pygame.transform.rotate(Player.sprite, Player.angle * -1)
         window.blit(player_sprite, (int(window_size[0] / 2), int(window_size[1] / 2)))

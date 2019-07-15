@@ -26,24 +26,19 @@ class Camera:
         return active_tiles
 
 
-class Jet: #TODO planes can fly backwards, move some Player methods to parent class
-    #TODO planes can fly too fast!
-    def __init__(self, starting_coordinates):
-        self.x = starting_coordinates[0]
-        self.y = starting_coordinates[1]
-        self.angle = starting_coordinates[2]
-        # angle defined as 0 degrees North, 90 deg East etc.
+class Jet:
     speed = 10
     acceleration = 2
     rotation_speed = 10
     maximum_speed = 20
     minimum_speed = 2
 
-
-class Player(Jet):
     def __init__(self, starting_coordinates):
-        Jet.__init__(self, starting_coordinates)
-        self.sprite = pygame.image.load('Assets/Sprites/Plane.png')
+        self.x = starting_coordinates[0]
+        self.y = starting_coordinates[1]
+        self.angle = starting_coordinates[2]
+        # angle defined as 0 degrees North, 90 deg East etc.
+
 
     def move(self):
         self.y -= int(self.speed * math.cos(math.radians(self.angle)))
@@ -53,4 +48,23 @@ class Player(Jet):
         self.angle += direction * self.rotation_speed
 
     def accelerate(self, direction):
-        self.speed += direction * self.acceleration
+        if self.speed == self.maximum_speed:
+            if direction == -1:
+                self.speed += direction * self.acceleration
+        elif self.speed == self.minimum_speed:
+            if direction == 1:
+                self.speed += direction * self.acceleration
+        else:
+            self.speed += direction * self.acceleration
+
+
+
+class Player(Jet):
+    def __init__(self, starting_coordinates):
+        Jet.__init__(self, starting_coordinates)
+        self.sprite = pygame.image.load('Assets/Sprites/Plane.png')
+
+    def Status(self):
+        print('Speed = ' + str(self.speed))
+        print('Direction = ' + str(self.angle) + ' degrees')
+
