@@ -30,7 +30,7 @@ class Camera:
 class Jet:
     speed = 10
     acceleration = 2
-    rotation_speed = 10
+    rotation_speed = 5
     maximum_speed = 20
     minimum_speed = 2
 
@@ -47,6 +47,10 @@ class Jet:
 
     def rotate(self, direction):
         self.angle += direction * self.rotation_speed
+        if self.angle < 0:
+            self.angle += 360
+        elif self.angle >= 360:
+            self.angle -= 360
 
     def accelerate(self, direction):
         if self.speed == self.maximum_speed:
@@ -68,13 +72,17 @@ class Player(Jet):
     def Status(self):
         print('Speed = ' + str(self.speed))
         print('Direction = ' + str(self.angle) + ' degrees')
+        print('x = ' + str(self.x))
+        print('y = '+ str(self.y))
 
 
 class Enemy(Jet):
     def __init__(self, starting_coordinates):
         Jet.__init__(self, starting_coordinates)
         self.sprite = pygame.image.load('Assets/Sprites/Plane.png')
-        self.behaviours = (self.turn_left,self.turn_right, self.do_nothing)
+        # self.behaviours = (self.turn_left,self.turn_right, self.do_nothing,
+        #                    self.speed_up, self.slow_down, self.follow_player)
+        self.behaviours = (self.follow_player,)
         self.speed = 2
         self.behaviour = self.do_nothing
         self.last_behaviour = self.do_nothing
@@ -84,7 +92,7 @@ class Enemy(Jet):
         super().move()
         self.last_behaviour_time += 1
 
-    def choose_behaviour(self):
+    def choose_behaviour(self, player):  # All behaviours need optional kwargs so player can be passed to follow player
         if self.last_behaviour == self.turn_left:
             self.behaviour = self.do_nothing
         elif self.last_behaviour == self.turn_right:
@@ -92,18 +100,37 @@ class Enemy(Jet):
         else:
             self.behaviour = random.choice(self.behaviours)
             self.behaviour_duration = random.randint(5,30)
-        self.behaviour()
+        self.behaviour(player=player)
         self.last_behaviour = self.behaviour
 
-    def turn_left(self):
+    def turn_left(self, **kwargs):
         if self.last_behaviour_time < self.behaviour_duration:
             self.rotate(-1)
 
-    def turn_right(self):
+    def turn_right(self, **kwargs):
         if self.last_behaviour_time < self.behaviour_duration:
             self.rotate(1)
 
-    def do_nothing(self):
+    def slow_down(self, **kwargs):
+        if self.last_behaviour_time < int(self.behaviour_duration/10):  # /10 to avoid hitting min/max speed in one go
+            self.accelerate(-1)
+
+    def speed_up(self, **kwargs):
+        if self.last_behaviour_time < int(self.behaviour_duration/10):
+            self.accelerate(1)
+
+    def follow_player(self, player):
+        if self.last_behaviour_time < int(self.behaviour_duration):
+            x_diff = player.x-self.x
+            y_diff = player.y-self.y
+            if x_diff != 0:
+                if y_diff != 0:
+                    target_angle = math.degrees(math.atan(x_diff/y_diff))
+                    if self.angle > target_angle:
+                        self.turn_left()
+                    elif self.angle < target_angle:
+                        self.turn_right()
+    def do_nothing(self, **kwargs):
         pass
 
     def within_active_area(self, Camera):

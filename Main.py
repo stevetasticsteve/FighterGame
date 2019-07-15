@@ -10,20 +10,16 @@ map_size = (1000,800)
 player_start = (100,100)
 colours = {'White': (255, 255, 255),
            'Black': (0, 0, 0)}
-debug_mode = False
+debug_mode = True
 enemy_behaviour_time = 1.5
 
 
 def reset_screen(map):
     window.fill(colours['Black'])
-    # for tile in map.tile_map:
-    #     window.blit(pygame.image.load(tile[1]), tile[0])
     Camera.Move()
     background = Camera.Active_tiles()
     for tile in background:
         # Need to turn game coordinates into screen coordinates relative to the player
-        # screen_x = tile[0][0] - Camera.rect[0]
-        # screen_y = tile[0][1] - Camera.rect[1]
         screen_coord = convert_to_screen_coordinates((tile[0][0],tile[0][1]))
         window.blit(tile[1], screen_coord)
 
@@ -68,13 +64,15 @@ def game_loop():
         player_sprite = pygame.transform.rotate(Player.sprite, Player.angle * -1)
         window.blit(player_sprite, (int(window_size[0] / 2), int(window_size[1] / 2)))
 
-        # Enemy update
+        # Enemy updates
         if Enemy.last_behaviour_time > FPS * enemy_behaviour_time:
-            Enemy.choose_behaviour()
+            Enemy.choose_behaviour(Player)
             Enemy.last_behaviour_time = 0
         else:
-            Enemy.behaviour()
+            Enemy.behaviour(player=Player)
         Enemy.move()
+
+        # Draw enemies
         if Enemy.within_active_area(Camera):
             enemy_sprite = pygame.transform.rotate(Enemy.sprite, Enemy.angle * -1)
             window.blit(enemy_sprite, (convert_to_screen_coordinates((Enemy.x, Enemy.y))))
