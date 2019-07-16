@@ -98,6 +98,7 @@ class Player(Jet):
     def __init__(self, starting_coordinates):
         Jet.__init__(self, starting_coordinates)
         self.sprite = pygame.image.load('Assets/Sprites/Plane.png')
+        self.speed = 2
 
     def Status(self):
         print('Speed = ' + str(self.speed))
