@@ -23,6 +23,21 @@ class TestEntities(unittest.TestCase):
     def test_follow_player(self):
         self.assertEqual(self.enemy.player_angle(self.player), 315)
 
+        def new_angle(x,y,ans):
+            self.enemy.x, self.enemy.y = x, y
+            self.assertEqual(self.enemy.player_angle(self.player), ans)
+
+        new_angle(100,110,0)
+        new_angle(90,110,45)
+        new_angle(90,100,90)
+        new_angle(90,90,135)
+        new_angle(100,90,180)
+        new_angle(110,90,225)
+        new_angle(110,100,270)
+        new_angle(100,100,0)
+
+
+
 class TestMainGame(unittest.TestCase):
     def test_screen_coordinate_converter(self):
         pass

@@ -45,12 +45,16 @@ class Jet:
         self.y -= int(self.speed * math.cos(math.radians(self.angle)))
         self.x += int(self.speed * math.sin(math.radians(self.angle)))
 
+    def normalize_angle(self, angle):
+        if angle < 0:
+            angle += 360
+        elif angle >= 360:
+            angle -= 360
+        return angle
+
     def rotate(self, direction):
         self.angle += direction * self.rotation_speed
-        if self.angle < 0:
-            self.angle += 360
-        elif self.angle >= 360:
-            self.angle -= 360
+        self.angle = self.normalize_angle(self.angle)
 
     def accelerate(self, direction):
         if self.speed == self.maximum_speed:
@@ -63,8 +67,34 @@ class Jet:
             self.speed += direction * self.acceleration
 
     def player_angle(self, player):
-        pass
         # tells you what angle entity needs to point at to face player
+        x_diff = player.x - self.x
+        y_diff = player.y - self.y
+        if x_diff == 0:
+            if y_diff > 0:
+                return 180
+            else:
+                return 0
+        if y_diff == 0:
+            if x_diff > 0:
+                return 90
+            else:
+                return 270
+        angle = math.degrees(math.atan(x_diff / y_diff))
+
+        if x_diff > 0:
+            if y_diff > 0:
+                angle += 90
+            elif y_diff < 0:
+                angle += 90
+        elif x_diff < 0:
+            if y_diff > 0:
+                angle -= 90
+            elif y_diff < 0:
+                angle = 270 + angle
+
+        return self.normalize_angle(angle)
+
 
 
 
@@ -124,16 +154,15 @@ class Enemy(Jet):
             self.accelerate(1)
 
     def follow_player(self, player):
-        if self.last_behaviour_time < int(self.behaviour_duration):
-            x_diff = player.x-self.x
-            y_diff = player.y-self.y
-            if x_diff != 0:
-                if y_diff != 0:
-                    target_angle = math.degrees(math.atan(x_diff/y_diff))
-                    if self.angle > target_angle:
-                        self.turn_left()
-                    elif self.angle < target_angle:
-                        self.turn_right()
+        pass
+        # if self.last_behaviour_time < int(self.behaviour_duration):
+        #
+        #             if self.angle > target_angle:
+        #                 self.turn_left()
+        #             elif self.angle < target_angle:
+        #                 self.turn_right()
+
+
     def do_nothing(self, **kwargs):
         pass
 
