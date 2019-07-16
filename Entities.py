@@ -70,28 +70,24 @@ class Jet:
         # tells you what angle entity needs to point at to face player
         x_diff = player.x - self.x
         y_diff = player.y - self.y
+        # If entity has one plane (or more) same as player:
         if x_diff == 0:
             if y_diff > 0:
                 return 180
-            else:
+            else: # ie. zero or negative
                 return 0
         if y_diff == 0:
             if x_diff > 0:
                 return 90
             else:
-                return 270
+                return 270 # case where x_diff = 0 already covered
+        # If entity is not on same plane as player
         angle = math.degrees(math.atan(x_diff / y_diff))
-
+        # Adjustments below for each quadrant
         if x_diff > 0:
-            if y_diff > 0:
-                angle += 90
-            elif y_diff < 0:
-                angle += 90
+            angle += 90
         elif x_diff < 0:
-            if y_diff > 0:
-                angle -= 90
-            elif y_diff < 0:
-                angle = 270 + angle
+            angle -= 90
 
         return self.normalize_angle(angle)
 
@@ -154,13 +150,12 @@ class Enemy(Jet):
             self.accelerate(1)
 
     def follow_player(self, player):
-        pass
-        # if self.last_behaviour_time < int(self.behaviour_duration):
-        #
-        #             if self.angle > target_angle:
-        #                 self.turn_left()
-        #             elif self.angle < target_angle:
-        #                 self.turn_right()
+        if self.last_behaviour_time < int(self.behaviour_duration):
+            target_angle = self.player_angle(player)
+            if self.angle > target_angle:
+                self.turn_left()
+            elif self.angle < target_angle:
+                self.turn_right()
 
 
     def do_nothing(self, **kwargs):
