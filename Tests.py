@@ -21,7 +21,7 @@ class TestEntities(unittest.TestCase):
 
 
     def test_follow_player(self):
-        pass
+        self.assertEqual(self.enemy.player_angle(self.player), 315)
 
 class TestMainGame(unittest.TestCase):
     def test_screen_coordinate_converter(self):

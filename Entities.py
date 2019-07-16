@@ -62,6 +62,10 @@ class Jet:
         else:
             self.speed += direction * self.acceleration
 
+    def player_angle(self, player):
+        pass
+        # tells you what angle entity needs to point at to face player
+
 
 
 class Player(Jet):
