@@ -12,16 +12,16 @@ class TestEntities(unittest.TestCase):
         self.assertEqual(self.player.x, 100)
         self.assertEqual(self.player.y, 100)
         self.assertEqual(self.player.angle, 0)
-        self.assertEqual(self.player.speed, 10)
+        self.assertEqual(self.player.speed, 2)
         self.player.move()
         self.assertEqual(self.player.x, 100)
-        self.assertEqual(self.player.y, 90)
+        self.assertEqual(self.player.y, 100 - self.player.speed)
         self.assertEqual(self.player.angle, 0)
-        self.assertEqual(self.player.speed, 10)
+        self.assertEqual(self.player.speed, 2)
 
 
-    def test_follow_player(self):
-        self.assertEqual(self.enemy.player_angle(self.player), 315)
+    def test_player_angle(self):
+        # self.assertEqual(self.enemy.player_angle(self.player), 315)
 
         def new_angle(x,y,ans):
             self.enemy.x, self.enemy.y = x, y
@@ -35,6 +35,18 @@ class TestEntities(unittest.TestCase):
         new_angle(110,90,225)
         new_angle(110,100,270)
         new_angle(100,100,0)
+
+        self.player.x = 0
+        self.player.y = 0
+        new_angle(0, 0, 0)
+        new_angle(-1, -1, 135) # NW
+        new_angle(0, -1, 180) # N
+        new_angle(1, -1, 225) # NE
+        new_angle(1, 0, 270) # E
+        new_angle(1, 1, 315) # SE
+        new_angle(0, 1, 0) # S
+        new_angle(-1, 1, 45) # SW
+        new_angle(-1, 0, 90) # W
 
 
 

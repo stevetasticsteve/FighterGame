@@ -84,14 +84,13 @@ class Jet:
         # If entity is not on same plane as player
         angle = math.degrees(math.atan(x_diff / y_diff))
         # Adjustments below for each quadrant
+
         if x_diff > 0:
             angle += 90
         elif x_diff < 0:
             angle -= 90
 
-        return self.normalize_angle(angle)
-
-
+        return int(self.normalize_angle(angle))
 
 
 class Player(Jet):

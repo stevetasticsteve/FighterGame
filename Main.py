@@ -31,13 +31,14 @@ def convert_to_screen_coordinates(coord):
     screen_y = coord[1] - Camera.rect[1]
     return (screen_x, screen_y)
 
-def debug_window():
-    box_size = (100,100)
+
+def debug_window(content):
+    box_size = (200,100)
     debug_box = pygame.Surface(box_size, flags=pygame.SRCALPHA)
-    debug_box.fill((255,255,255,90))
-    debug_font = pygame.font.SysFont(game_font, 18)
-    debug_surf = debug_font.render('text', False, (0,0,0))
-    window.blit(debug_surf, (10,10))
+    debug_box.fill((255,255,255,150))
+    debug_font = pygame.font.SysFont(game_font, size=18)
+    text_surf = debug_font.render(content, False, (0,0,0))
+    debug_box.blit(text_surf, (10,10))
     window.blit(debug_box, (window_size[0]-box_size[0], window_size[1]-box_size[1]))
 
 
@@ -88,7 +89,7 @@ def game_loop():
 
         #UI
         if debug_mode:
-            debug_window()
+            debug_window('Target angle = ' + str(Enemy.player_angle(Player)))
 
         # Game update
         pygame.display.update()
