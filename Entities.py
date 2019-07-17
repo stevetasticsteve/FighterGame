@@ -110,7 +110,7 @@ class Player(Jet):
 class Enemy(Jet):
     def __init__(self, starting_coordinates):
         Jet.__init__(self, starting_coordinates)
-        self.sprite = pygame.image.load('Assets/Sprites/Plane.png')
+        self.sprite = pygame.image.load('Assets/Sprites/Enemy.png')
         # self.behaviours = (self.turn_left,self.turn_right, self.do_nothing,
         #                    self.speed_up, self.slow_down, self.follow_player)
         self.behaviours = (self.follow_player,)

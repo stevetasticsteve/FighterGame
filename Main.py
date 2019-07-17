@@ -12,6 +12,7 @@ colours = {'White': (255, 255, 255),
            'Black': (0, 0, 0)}
 debug_mode = True
 enemy_behaviour_time = 1.5
+game_font = 'Arial'
 
 
 def reset_screen(map):
@@ -29,6 +30,16 @@ def convert_to_screen_coordinates(coord):
     screen_x = coord[0] - Camera.rect[0]
     screen_y = coord[1] - Camera.rect[1]
     return (screen_x, screen_y)
+
+def debug_window():
+    box_size = (100,100)
+    debug_box = pygame.Surface(box_size, flags=pygame.SRCALPHA)
+    debug_box.fill((255,255,255,90))
+    debug_font = pygame.font.SysFont(game_font, 18)
+    debug_surf = debug_font.render('text', False, (0,0,0))
+    window.blit(debug_surf, (10,10))
+    window.blit(debug_box, (window_size[0]-box_size[0], window_size[1]-box_size[1]))
+
 
 #TODO create a loading screen so the long pause at the start as images load to memory isn't though of as a bug
 
@@ -58,8 +69,6 @@ def game_loop():
 
         # Player update
         Player.move()
-        if debug_mode:
-            Player.Status()
         reset_screen(map)
         player_sprite = pygame.transform.rotate(Player.sprite, Player.angle * -1)
         window.blit(player_sprite, (int(window_size[0] / 2), int(window_size[1] / 2)))
@@ -76,6 +85,11 @@ def game_loop():
         if Enemy.within_active_area(Camera):
             enemy_sprite = pygame.transform.rotate(Enemy.sprite, Enemy.angle * -1)
             window.blit(enemy_sprite, (convert_to_screen_coordinates((Enemy.x, Enemy.y))))
+
+        #UI
+        if debug_mode:
+            debug_window()
+
         # Game update
         pygame.display.update()
         FPS_clock.tick(FPS)
@@ -84,12 +98,13 @@ def game_loop():
 if __name__ == '__main__':
 
     pygame.init()
+    pygame.font.init()
     FPS_clock = pygame.time.Clock()
     window = pygame.display.set_mode(window_size)
     pygame.display.set_caption('Flyover')
     pygame.key.set_repeat(10) # Enables direction button to be held
     map = MapGenerator.map(map_size)
     Player = Entities.Player((int(window_size[0]/2),int(window_size[1]/2),90))
-    Enemy = Entities.Enemy((Player.x,Player.y,90))
+    Enemy = Entities.Enemy((Player.x -100 ,Player.y + 120,90))
     Camera = Entities.Camera(Player, window_size, map)
     game_loop()
