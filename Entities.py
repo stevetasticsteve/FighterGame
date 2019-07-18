@@ -70,26 +70,23 @@ class Jet:
         # tells you what angle entity needs to point at to face player
         x_diff = player.x - self.x
         y_diff = player.y - self.y
-        # If entity has one plane (or more) same as player:
-        if x_diff == 0:
-            if y_diff > 0:
-                return 180
-            else: # ie. zero or negative
-                return 0
-        if y_diff == 0:
+        dist = math.hypot(x_diff, y_diff)
+        print(x_diff, y_diff, dist)
+
+        if dist == 0: # Currently at the player's position
+            return int(player.angle)
+
+        angle = math.degrees(math.acos(x_diff / dist))
+        print('angle = ' + str(angle))
+        if angle == 0:
             if x_diff > 0:
                 return 90
-            else:
-                return 270 # case where x_diff = 0 already covered
-        # If entity is not on same plane as player
-        angle = math.degrees(math.atan(x_diff / y_diff))
-
-        # Adjustments below for each quadrant
-
-        if x_diff > 0:
+        elif angle == 180:
+            return 270
+        if y_diff > 0:
             angle += 90
-        elif x_diff < 0:
-            angle -= 90
+        elif y_diff < 0:
+            angle = 90 - angle
 
         return int(self.normalize_angle(angle))
 
