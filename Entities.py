@@ -145,10 +145,20 @@ class Enemy(Jet):
     def follow_player(self, player):
         if self.last_behaviour_time < int(self.behaviour_duration):
             target_angle = self.player_angle(player)
+            angle_change = abs(target_angle - self.angle)
+            opposite = False
+            if angle_change > 180:
+                opposite = True
             if self.angle > target_angle:
-                self.turn_left()
+                if opposite:
+                    self.turn_right()
+                else:
+                    self.turn_left()
             elif self.angle < target_angle:
-                self.turn_right()
+                if opposite:
+                    self.turn_left()
+                else:
+                    self.turn_right()
 
 
     def do_nothing(self, **kwargs):

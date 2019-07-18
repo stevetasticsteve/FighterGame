@@ -105,7 +105,7 @@ if __name__ == '__main__':
     pygame.display.set_caption('Flyover')
     pygame.key.set_repeat(10) # Enables direction button to be held
     map = MapGenerator.map(map_size)
-    Player = Entities.Player((int(window_size[0]/2),int(window_size[1]/2),90))
-    Enemy = Entities.Enemy((Player.x -100 ,Player.y + 120,90))
+    Player = Entities.Player((int(window_size[0]/2), int(window_size[1]/2), 0))
+    Enemy = Entities.Enemy((Player.x, Player.y + 120, 0))
     Camera = Entities.Camera(Player, window_size, map)
     game_loop()
