@@ -18,6 +18,23 @@ class TestEntities(unittest.TestCase):
         self.assertEqual(self.player.x, last_pos[0] + self.player.speed/2)
         self.assertEqual(self.player.y, last_pos[1] - self.player.speed/2)
 
+    def test_accelerate(self):
+        original_speed = self.player.speed
+        self.player.accelerate(1)
+        # speed up
+        self.assertEqual(self.player.speed, original_speed + self.player.acceleration)
+        # slow down
+        self.player.accelerate(-1)
+        self.assertEqual(self.player.speed, original_speed)
+        # can't go below minimum speed
+        for i in range(50):
+            self.player.accelerate(-1)
+        self.assertEqual(self.player.speed, self.player.minimum_speed)
+        # can't go above maximum speed
+        for i in range(50):
+            self.player.accelerate(1)
+        self.assertEqual(self.player.speed, self.player.maximum_speed)
+
 
     def test_normalize_angle(self):
         self.assertEqual(self.player.normalize_angle(27), 27)

@@ -92,27 +92,22 @@ class Player(Jet):
         Jet.__init__(self, starting_coordinates)
         self.sprite = pygame.image.load('Assets/Sprites/Plane.png')
 
-    def Status(self):
-        print('Speed = ' + str(self.speed))
-        print('Direction = ' + str(self.angle) + ' degrees')
-        print('x = ' + str(self.x))
-        print('y = '+ str(self.y))
-
 
 class Enemy(Jet):
     def __init__(self, starting_coordinates):
         Jet.__init__(self, starting_coordinates)
         self.sprite = pygame.image.load('Assets/Sprites/Enemy.png')
-        # self.behaviours = (self.turn_left,self.turn_right, self.do_nothing,
-        #                    self.speed_up, self.slow_down, self.follow_player)
-        self.behaviours = (self.follow_player,)
+        self.behaviours = (self.turn_left,self.turn_right, self.do_nothing,
+                           self.speed_up, self.slow_down, self.follow_player)
         self.speed = 2
+        # starting behaviours
         self.behaviour = self.do_nothing
         self.last_behaviour = self.do_nothing
         self.last_behaviour_time = 0
 
     def move(self):
         super().move()
+        # add to the behaviour counter after every move
         self.last_behaviour_time += 1
 
     def choose_behaviour(self, player):  # All behaviours need optional kwargs so player can be passed to follow player
