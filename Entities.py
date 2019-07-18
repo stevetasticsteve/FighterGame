@@ -71,16 +71,12 @@ class Jet:
         x_diff = player.x - self.x
         y_diff = player.y - self.y
         dist = math.hypot(x_diff, y_diff)
-        print(x_diff, y_diff, dist)
-
         if dist == 0: # Currently at the player's position
             return int(player.angle)
 
         angle = math.degrees(math.acos(x_diff / dist))
-        print('angle = ' + str(angle))
         if angle == 0:
-            if x_diff > 0:
-                return 90
+            return 90
         elif angle == 180:
             return 270
         if y_diff > 0:
