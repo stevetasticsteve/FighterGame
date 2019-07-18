@@ -55,6 +55,9 @@ class TestEntities(unittest.TestCase):
         new_angle(-1, 0, 90) # W
 
         new_angle(314, -92, 253)
+        new_angle(-70, -206, 161)
+        new_angle(-20, 73, 15)
+        new_angle(123, 54, 293)
 
 
 class TestMainGame(unittest.TestCase):
