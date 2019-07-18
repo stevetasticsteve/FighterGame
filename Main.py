@@ -12,6 +12,7 @@ colours = {'White': (255, 255, 255),
            'Black': (0, 0, 0)}
 debug_mode = True
 enemy_behaviour_time = 1.5
+number_of_enemies = 5
 game_font = 'Arial'
 
 
@@ -23,6 +24,15 @@ def reset_screen(map):
         # Need to turn game coordinates into screen coordinates relative to the player
         screen_coord = convert_to_screen_coordinates((tile[0][0],tile[0][1]))
         window.blit(tile[1], screen_coord)
+
+def create_entities():
+    entities = []
+    for i in range(number_of_enemies):
+        x = random.randint(0,map_size[0])
+        y = random.randint(0, map_size[1])
+        angle = random.randint(0, 359)
+        entities.append(Entities.Enemy((x,y ,angle)))
+    return entities
 
 
 def convert_to_screen_coordinates(coord):
@@ -75,21 +85,22 @@ def game_loop():
         window.blit(player_sprite, (int(window_size[0] / 2), int(window_size[1] / 2)))
 
         # Enemy updates
-        if Enemy.last_behaviour_time > FPS * enemy_behaviour_time:
-            Enemy.choose_behaviour(Player)
-            Enemy.last_behaviour_time = 0
-        else:
-            Enemy.behaviour(player=Player)
-        Enemy.move()
+        for entity in entities:
+            if entity.last_behaviour_time > FPS * enemy_behaviour_time:
+                entity.choose_behaviour(Player)
+                entity.last_behaviour_time = 0
+            else:
+                entity.behaviour(player=Player)
+                entity.move()
 
-        # Draw enemies
-        if Enemy.within_active_area(Camera):
-            enemy_sprite = pygame.transform.rotate(Enemy.sprite, Enemy.angle * -1)
-            window.blit(enemy_sprite, (convert_to_screen_coordinates((Enemy.x, Enemy.y))))
+            # Draw enemies
+            if entity.within_active_area(Camera):
+                enemy_sprite = pygame.transform.rotate(entity.sprite, entity.angle * -1)
+                window.blit(enemy_sprite, (convert_to_screen_coordinates((entity.x, entity.y))))
 
         #UI
         if debug_mode:
-            debug_window('Target angle = ' + str(Enemy.player_angle(Player  )))
+            debug_window('Target angle = ' + str(entities[0].player_angle(Player)))
 
         # Game update
         pygame.display.update()
@@ -106,6 +117,6 @@ if __name__ == '__main__':
     pygame.key.set_repeat(10) # Enables direction button to be held
     map = MapGenerator.map(map_size)
     Player = Entities.Player((int(window_size[0]/2), int(window_size[1]/2), 180))
-    Enemy = Entities.Enemy((Player.x, Player.y - 120, 0))
+    entities = create_entities()
     Camera = Entities.Camera(Player, window_size, map)
     game_loop()
