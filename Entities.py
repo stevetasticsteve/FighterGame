@@ -146,9 +146,13 @@ class Enemy(Jet):
         if self.last_behaviour_time < int(self.behaviour_duration):
             target_angle = self.player_angle(player)
             angle_change = abs(target_angle - self.angle)
-            opposite = False
+            # check to make sure won't try to turn more than 180 degrees
+            opposite = False # if angle is more than 180 it's quicker to go the other way
             if angle_change > 180:
                 opposite = True
+            elif angle_change == 180: # don't get stuck flying away from player
+                self.turn_right()
+            # choose direction to turn
             if self.angle > target_angle:
                 if opposite:
                     self.turn_right()
