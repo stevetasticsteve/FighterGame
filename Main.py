@@ -94,6 +94,10 @@ def game_loop():
             else:
                 entity.behaviour(player=Player)
                 entity.move()
+            shoot = entity.check_sights(Player)
+            if shoot:
+                projectiles.append(shoot)
+
             # Draw enemies
             if entity.within_active_area(Camera):
                 enemy_sprite = pygame.transform.rotate(entity.sprite, entity.angle * -1)

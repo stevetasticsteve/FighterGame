@@ -73,9 +73,7 @@ class Jet:
 
     def player_angle(self, player):
         # tells you what angle entity needs to point at to face player
-        x_diff = player.x - self.x
-        y_diff = player.y - self.y
-        dist = math.hypot(x_diff, y_diff)
+        dist, x_diff, y_diff = self.distance_to_player(player)
         if dist == 0: # Currently at the player's position
             return int(player.angle)
 
@@ -91,8 +89,15 @@ class Jet:
 
         return int(self.normalize_angle(angle))
 
-    def shoot_missile(self):
-        return Missile((self.x, self.y, self.angle))
+
+    def distance_to_player(self, player):
+        x_diff = player.x - self.x
+        y_diff = player.y - self.y
+        dist = math.hypot(x_diff, y_diff)
+        return dist, x_diff, y_diff
+
+
+
 
 
 class Player(Jet):
@@ -112,6 +117,7 @@ class Enemy(Jet):
         self.behaviour = self.do_nothing
         self.last_behaviour = self.do_nothing
         self.last_behaviour_time = 0
+        self.firing_range = 200
 
     def move(self):
         super().move()
@@ -170,6 +176,16 @@ class Enemy(Jet):
 
     def do_nothing(self, **kwargs):
         pass
+
+    def check_sights(self, player):
+        dist = self.distance_to_player(player)[0]
+        if dist <= self.firing_range:
+            # check nose is +- 10 degrees of player
+            if self.angle in range (self.player_angle(player) - 10, self.player_angle(player) + 10):
+                return self.shoot_missile()
+
+    def shoot_missile(self):
+        return Missile((self.x, self.y, self.angle))
 
 
 
