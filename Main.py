@@ -77,6 +77,8 @@ def game_loop():
                     Player.rotate(1)
                 if event.key == pygame.K_ESCAPE:
                     close_program()
+                if event.key == pygame.K_SPACE:
+                    projectiles.append(Player.shoot_missile())
 
         # Player update
         Player.move()
@@ -92,11 +94,20 @@ def game_loop():
             else:
                 entity.behaviour(player=Player)
                 entity.move()
-
             # Draw enemies
             if entity.within_active_area(Camera):
                 enemy_sprite = pygame.transform.rotate(entity.sprite, entity.angle * -1)
                 window.blit(enemy_sprite, (convert_to_screen_coordinates((entity.x, entity.y))))
+
+        # Projectile updates
+        for projectile in projectiles:
+            if projectile.time_alive > projectile.fuse:
+                del projectile
+                continue
+            projectile.move()
+            if projectile.within_active_area(Camera):
+                # pygame.transform.rotate(projectile.surface, projectile.angle)
+                window.blit(projectile.surface, (convert_to_screen_coordinates((projectile.x, projectile.y))))
 
         #UI
         if debug_mode:
@@ -118,5 +129,6 @@ if __name__ == '__main__':
     map = MapGenerator.map(map_size)
     Player = Entities.Player((int(window_size[0]/2), int(window_size[1]/2), 180))
     entities = create_entities()
+    projectiles = []
     Camera = Entities.Camera(Player, window_size, map)
     game_loop()

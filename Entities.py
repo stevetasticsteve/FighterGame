@@ -40,6 +40,11 @@ class Jet:
         self.angle = starting_coordinates[2]
         # angle defined as 0 degrees North, 90 deg East etc.
 
+    def within_active_area(self, Camera):
+        if self.x in range (Camera.rect[0], Camera.rect[2]):
+            if self.y in range(Camera.rect[1], Camera.rect[3]):
+                return True
+
 
     def move(self):
         self.y -= int(self.speed * math.cos(math.radians(self.angle)))
@@ -85,6 +90,9 @@ class Jet:
             angle = 90 - angle
 
         return int(self.normalize_angle(angle))
+
+    def shoot_missile(self):
+        return Missile((self.x, self.y, self.angle))
 
 
 class Player(Jet):
@@ -163,7 +171,29 @@ class Enemy(Jet):
     def do_nothing(self, **kwargs):
         pass
 
-    def within_active_area(self, Camera):
-        if self.x in range (Camera.rect[0], Camera.rect[2]):
-            if self.y in range(Camera.rect[1], Camera.rect[3]):
-                return True
+
+
+class Missile(Jet):
+    speed = Jet.maximum_speed + 2
+    fuse = 30
+    def __init__(self, starting_coordinates):
+        Jet.__init__(self, starting_coordinates)
+        self.x = starting_coordinates[0] + 32 # start in sprite's center
+        self.y = starting_coordinates[1] + 32
+        self.angle = starting_coordinates[2]
+        self.time_alive = 0
+        width, height = 2,6
+        if self.angle in range (315, 360):
+            x,y = width, height
+        elif self.angle in range(0, 46):
+            x,y = width, height
+        elif self.angle in range(135, 226):
+            x, y = width, height
+        else:
+            x,y = height, width
+        self.surface = pygame.Surface((x, y))
+        self.surface.fill((255, 255, 255))
+
+    def move(self):
+        super().move()
+        self.time_alive += 1
