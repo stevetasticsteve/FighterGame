@@ -54,6 +54,8 @@ class TestEntities(unittest.TestCase):
         new_angle(-1, 1, 45) # SW
         new_angle(-1, 0, 90) # W
 
+        new_angle(314, -92, 253)
+
 
 class TestMainGame(unittest.TestCase):
     def test_screen_coordinate_converter(self):
