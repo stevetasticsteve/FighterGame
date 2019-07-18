@@ -89,7 +89,7 @@ def game_loop():
 
         #UI
         if debug_mode:
-            debug_window('Target angle = ' + str(Enemy.player_angle(Player)))
+            debug_window('Target angle = ' + str(Enemy.player_angle(Player  )))
 
         # Game update
         pygame.display.update()

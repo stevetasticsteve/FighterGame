@@ -28,7 +28,7 @@ class Camera:
 
 
 class Jet:
-    speed = 10
+    speed = 2
     acceleration = 2
     rotation_speed = 5
     maximum_speed = 20
@@ -50,7 +50,7 @@ class Jet:
             angle += 360
         elif angle >= 360:
             angle -= 360
-        return angle
+        return int(angle)
 
     def rotate(self, direction):
         self.angle += direction * self.rotation_speed
@@ -83,6 +83,7 @@ class Jet:
                 return 270 # case where x_diff = 0 already covered
         # If entity is not on same plane as player
         angle = math.degrees(math.atan(x_diff / y_diff))
+
         # Adjustments below for each quadrant
 
         if x_diff > 0:
@@ -97,7 +98,6 @@ class Player(Jet):
     def __init__(self, starting_coordinates):
         Jet.__init__(self, starting_coordinates)
         self.sprite = pygame.image.load('Assets/Sprites/Plane.png')
-        self.speed = 2
 
     def Status(self):
         print('Speed = ' + str(self.speed))
