@@ -115,7 +115,7 @@ class Jet:
         return dist, x_diff, y_diff
 
     def shoot_missile(self):
-        return Missile((self.x, self.y, self.angle))
+        return Missile((self.x, self.y, self.angle), str(self))
 
 
 
@@ -123,6 +123,9 @@ class Player(Jet):
     def __init__(self, starting_coordinates):
         Jet.__init__(self, starting_coordinates)
         self.sprite = pygame.image.load('Assets/Sprites/Plane.png')
+
+    def __str__(self):
+        return 'Player'
 
 
 class Enemy(Jet):
@@ -141,6 +144,9 @@ class Enemy(Jet):
 
     def __repr__(self):
         return 'Enemy @ ' + str(self.coord)
+
+    def __str__(self):
+        return 'Enemy'
 
     def move(self):
         super().move()
@@ -208,13 +214,15 @@ class Enemy(Jet):
                 return self.shoot_missile()
 
 class Missile(Jet):
+    # Todo player gets hit by his own missiles when launched. Might happen to enemies too
     speed = Jet.maximum_speed + 2
     fuse = 30
-    def __init__(self, starting_coordinates):
+    def __init__(self, starting_coordinates, shooter):
         Jet.__init__(self, starting_coordinates)
         self.x = starting_coordinates[0] + 32 # start in sprite's center
         self.y = starting_coordinates[1] + 32
         self.angle = starting_coordinates[2]
+        self.shooter = shooter
         self.time_alive = 0
         width, height = 2,6
         if self.angle in range (315, 360):
@@ -228,6 +236,9 @@ class Missile(Jet):
         self.surface = pygame.Surface((x, y))
         self.surface.fill((255, 255, 255))
         self.collision_box = pygame.Rect((self.x - 1, self.y - 1), (width, height))
+
+    def __str__(self):
+        return 'Missile shot by ' + self.shooter
 
     def move(self):
         super().move()

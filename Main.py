@@ -12,7 +12,7 @@ colours = {'White': (255, 255, 255),
            'Black': (0, 0, 0)}
 debug_mode = True
 enemy_behaviour_time = 1.5
-number_of_enemies = 5
+number_of_enemies = 20
 game_font = 'Arial'
 
 
@@ -97,9 +97,6 @@ def game_loop():
             shoot = entity.check_sights(Player)
             if shoot:
                 projectiles.append(shoot)
-            # for projectile in projectiles:
-            #     if projectile.check_hits(Player):
-            #         print('Player hit')
 
 
             # Draw enemies
@@ -116,12 +113,13 @@ def game_loop():
             projectile.move()
         # Check player hits
             if projectile.check_hits(Player):
-                print('Player hit!')
+                if projectile.shooter != str(Player):
+                    print('Player hit by ' + str(projectile))
         # Check enemy hits
             for entity in entities:
                 if projectile.check_hits(entity):
                     entity.hit = True
-                    print('hit ' + str(entity))
+                    print(str(entity) + ' hit by ' + str(projectile))
             if projectile.within_active_area(Camera):
                 window.blit(projectile.surface, (convert_to_screen_coordinates((projectile.x, projectile.y))))
 
