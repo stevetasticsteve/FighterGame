@@ -97,13 +97,16 @@ def game_loop():
             shoot = entity.check_sights(Player)
             if shoot:
                 projectiles.append(shoot)
-            for projectile in projectiles:
-                projectile.check_hits(entity)
+            # for projectile in projectiles:
+            #     if projectile.check_hits(Player):
+            #         print('Player hit')
+
 
             # Draw enemies
             if entity.within_active_area(Camera):
                 enemy_sprite = pygame.transform.rotate(entity.sprite, entity.angle * -1)
                 window.blit(enemy_sprite, (convert_to_screen_coordinates((entity.blit_x, entity.blit_y))))
+
 
         # Projectile updates
         for projectile in projectiles:
@@ -111,8 +114,15 @@ def game_loop():
                 del projectile
                 continue
             projectile.move()
+        # Check player hits
+            if projectile.check_hits(Player):
+                print('Player hit!')
+        # Check enemy hits
+            for entity in entities:
+                if projectile.check_hits(entity):
+                    print('hit ' + str(entity))
+                    del entity
             if projectile.within_active_area(Camera):
-                # pygame.transform.rotate(projectile.surface, projectile.angle)
                 window.blit(projectile.surface, (convert_to_screen_coordinates((projectile.x, projectile.y))))
 
         #UI

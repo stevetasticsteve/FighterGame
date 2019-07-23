@@ -54,6 +54,7 @@ class Jet:
         self.blit_y = self.collision_box.centery - self.sprite_size[1] / 2
         self.x = self.collision_box.centerx
         self.y = self.collision_box.centery
+        self.coord = (self.x, self.y)
 
     def within_active_area(self, Camera):
         if self.x in range (Camera.rect[0], Camera.rect[2]):
@@ -136,6 +137,9 @@ class Enemy(Jet):
         self.behaviour = self.do_nothing
         self.last_behaviour = self.do_nothing
         self.last_behaviour_time = 0
+
+    def __repr__(self):
+        return 'Enemy @ ' + str(self.coord)
 
     def move(self):
         super().move()
@@ -230,5 +234,5 @@ class Missile(Jet):
 
     def check_hits(self, entity):
         if self.collision_box.colliderect(entity.collision_box):
-            print('hit')
+            return True
 
