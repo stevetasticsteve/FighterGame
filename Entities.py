@@ -222,7 +222,7 @@ class Missile(Jet):
             x,y = height, width
         self.surface = pygame.Surface((x, y))
         self.surface.fill((255, 255, 255))
-        self.collision_box = pygame.Rect((self.x - 1, self.y - 1), (self.x + 1, self.y + 1))
+        self.collision_box = pygame.Rect((self.x - 1, self.y - 1), (width, height))
 
     def move(self):
         super().move()
