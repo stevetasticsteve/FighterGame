@@ -42,9 +42,9 @@ class Jet:
         # x and y = center of entity, blitx and blity = top left corner
         # angle defined as 0 degrees North, 90 deg East etc.
         # Collision box defined as the inner 1/4 of the sprite
-        self.collision_box = pygame.Rect((starting_coordinates[0] - self.sprite_size[0]/8,
-                                          starting_coordinates[1] - self.sprite_size[1]/8),
-                                         (self.sprite_size[0]/4, self.sprite_size[1]/4))
+        self.collision_box = pygame.Rect((starting_coordinates[0] - self.sprite_size[0]/4,
+                                          starting_coordinates[1] - self.sprite_size[1]/4),
+                                         (self.sprite_size[0]/2, self.sprite_size[1]/2))
         # initialise game and blit coordinates
         self.update_coordinates()
 
@@ -137,6 +137,7 @@ class Enemy(Jet):
         self.behaviour = self.do_nothing
         self.last_behaviour = self.do_nothing
         self.last_behaviour_time = 0
+        self.hit = False
 
     def __repr__(self):
         return 'Enemy @ ' + str(self.coord)

@@ -120,10 +120,13 @@ def game_loop():
         # Check enemy hits
             for entity in entities:
                 if projectile.check_hits(entity):
+                    entity.hit = True
                     print('hit ' + str(entity))
-                    del entity
             if projectile.within_active_area(Camera):
                 window.blit(projectile.surface, (convert_to_screen_coordinates((projectile.x, projectile.y))))
+
+        # delete hit enemies
+        entities[:] = [entity for entity in entities if not entity.hit]
 
         #UI
         if debug_mode:
