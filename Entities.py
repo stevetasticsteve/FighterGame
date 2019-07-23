@@ -13,8 +13,10 @@ class Camera:
 
 
     def Move(self):
-        self.rect = (self.player.x - int(self.camera_width/2), self.player.y - int(self.camera_height/2),
-                     self.player.x + int(self.camera_width/2), self.player.y + int(self.camera_height/2))
+        self.rect = (self.player.collision_box.centerx - int(self.camera_width/2),
+                     self.player.collision_box.centery - int(self.camera_height/2),
+                     self.player.collision_box.centerx + int(self.camera_width/2),
+                     self.player.collision_box.centery + int(self.camera_height/2))
 
     def Active_tiles(self):
         # returns a list of tile tuples(x,y,img) that are currently around the player
@@ -33,12 +35,25 @@ class Jet:
     rotation_speed = 5
     maximum_speed = 20
     minimum_speed = 2
+    sprite_size = (64, 64)
 
     def __init__(self, starting_coordinates):
-        self.x = starting_coordinates[0]
-        self.y = starting_coordinates[1]
         self.angle = starting_coordinates[2]
+        # x and y = center of entity, blitx and blity = top left corner
         # angle defined as 0 degrees North, 90 deg East etc.
+        # Collision box defined as the inner 1/4 of the sprite
+        self.collision_box = pygame.Rect((starting_coordinates[0] - self.sprite_size[0]/8,
+                                          starting_coordinates[1] - self.sprite_size[1]/8),
+                                         (self.sprite_size[0]/4, self.sprite_size[1]/4))
+        # initialise game and blit coordinates
+        self.update_coordinates()
+
+    def update_coordinates(self):
+        # Draw x and draw y give the top left of the sprite - the coordinates passed to blit
+        self.blit_x = self.collision_box.centerx - self.sprite_size[0] / 2
+        self.blit_y = self.collision_box.centery - self.sprite_size[1] / 2
+        self.x = self.collision_box.centerx
+        self.y = self.collision_box.centery
 
     def within_active_area(self, Camera):
         if self.x in range (Camera.rect[0], Camera.rect[2]):
@@ -47,8 +62,10 @@ class Jet:
 
 
     def move(self):
-        self.y -= int(self.speed * math.cos(math.radians(self.angle)))
-        self.x += int(self.speed * math.sin(math.radians(self.angle)))
+        x_diff = int(self.speed * math.sin(math.radians(self.angle)))
+        y_diff = int(self.speed * math.cos(math.radians(self.angle)))*-1
+        self.collision_box.move_ip(x_diff, y_diff)
+        self.update_coordinates()
 
     def normalize_angle(self, angle):
         if angle < 0:
@@ -96,7 +113,8 @@ class Jet:
         dist = math.hypot(x_diff, y_diff)
         return dist, x_diff, y_diff
 
-
+    def shoot_missile(self):
+        return Missile((self.x, self.y, self.angle))
 
 
 
@@ -113,11 +131,11 @@ class Enemy(Jet):
         self.behaviours = (self.turn_left,self.turn_right, self.do_nothing,
                            self.speed_up, self.slow_down, self.follow_player)
         self.speed = 2
+        self.firing_range = 200
         # starting behaviours
         self.behaviour = self.do_nothing
         self.last_behaviour = self.do_nothing
         self.last_behaviour_time = 0
-        self.firing_range = 200
 
     def move(self):
         super().move()
@@ -184,11 +202,6 @@ class Enemy(Jet):
             if self.angle in range (self.player_angle(player) - 10, self.player_angle(player) + 10):
                 return self.shoot_missile()
 
-    def shoot_missile(self):
-        return Missile((self.x, self.y, self.angle))
-
-
-
 class Missile(Jet):
     speed = Jet.maximum_speed + 2
     fuse = 30
@@ -209,7 +222,13 @@ class Missile(Jet):
             x,y = height, width
         self.surface = pygame.Surface((x, y))
         self.surface.fill((255, 255, 255))
+        self.collision_box = pygame.Rect((self.x - 1, self.y - 1), (self.x + 1, self.y + 1))
 
     def move(self):
         super().move()
         self.time_alive += 1
+
+    def check_hits(self, entity):
+        if self.collision_box.colliderect(entity.collision_box):
+            print('hit')
+

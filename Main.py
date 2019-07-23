@@ -31,7 +31,7 @@ def create_entities():
         x = random.randint(0,map_size[0])
         y = random.randint(0, map_size[1])
         angle = random.randint(0, 359)
-        entities.append(Entities.Enemy((x,y ,angle)))
+        entities.append(Entities.Enemy((x, y, angle)))
     return entities
 
 
@@ -97,11 +97,13 @@ def game_loop():
             shoot = entity.check_sights(Player)
             if shoot:
                 projectiles.append(shoot)
+            for projectile in projectiles:
+                projectile.check_hits(entity)
 
             # Draw enemies
             if entity.within_active_area(Camera):
                 enemy_sprite = pygame.transform.rotate(entity.sprite, entity.angle * -1)
-                window.blit(enemy_sprite, (convert_to_screen_coordinates((entity.x, entity.y))))
+                window.blit(enemy_sprite, (convert_to_screen_coordinates((entity.blit_x, entity.blit_y))))
 
         # Projectile updates
         for projectile in projectiles:

@@ -1,6 +1,6 @@
 import unittest
 import Entities
-import os
+import pygame
 
 
 class TestEntities(unittest.TestCase):
@@ -12,8 +12,12 @@ class TestEntities(unittest.TestCase):
         self.player.move()
         self.assertEqual(self.player.x, self.player.x)
         self.assertEqual(self.player.y, 100 - self.player.speed)
-        self.player.angle = 45
+        self.assertEqual(self.player.collision_box,
+                         pygame.Rect((self.player.x - 16, self.player.y - 16 + self.player.speed),
+                                     (self.player.x + 16 , self.player.y + 16 + self.player.speed)))
+        # self.assertEqual(self.player.collision_box.center, (self.player.x, self.player.y))
         last_pos = (self.player.x, self.player.y)
+        self.player.angle = 45
         self.player.move()
         self.assertEqual(self.player.x, last_pos[0] + self.player.speed/2)
         self.assertEqual(self.player.y, last_pos[1] - self.player.speed/2)
