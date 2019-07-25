@@ -14,10 +14,10 @@ x 64 pixel sprites and tiles
 - Consumable ammo supply
 - Refuel and rearm at your side's airfield
 - UI showing health, throttle ammo and fuel
-- Enemy planes that move semi randomly
-- Sound effects
-- High score system
-- Player can't fly off the map edge into infinity
+x Enemy planes that move semi randomly
+x Sound effects
+x High score system
+x Player can't fly off the map edge into infinity
 
 Extra bonus features:
 - Radar minimap
