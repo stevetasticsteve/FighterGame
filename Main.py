@@ -24,6 +24,7 @@ class GameEngine:
         self.window = pygame.display.set_mode(self.settings['window_size'])
         pygame.display.set_caption('Flyover')
         pygame.key.set_repeat(10)  # Enables direction button to be held
+        self.start_game()
 
     def start_game(self):
         self.map = MapGenerator.map(self.settings['map_size'])
@@ -35,6 +36,7 @@ class GameEngine:
         self.projectiles = []
         self.Camera = Entities.Camera(self.Player, self.settings['window_size'],
                                       self.map)
+        self.score = 0
         self.game_loop()
 
     def game_loop(self):
@@ -99,14 +101,13 @@ class GameEngine:
                     if projectile.shooter != str(self.Player):
                         self.death_sfx.play()
                         game_over = True
-                        # print('Player hit by ' + str(projectile))
                 # Check enemy hits
                 for entity in self.entities:
                     if projectile.check_hits(entity):
                         if projectile.shooter == str(self.Player):  # only allow player to hit enemies
                             entity.hit = True
                             random.choice(self.enemy_kill_sfx).play()
-                            # print(str(entity) + ' hit by ' + str(projectile))
+                            self.score += 10
                 if projectile.within_active_area(self.Camera):
                     self.window.blit(projectile.surface,
                                 (self.convert_to_screen_coordinates((projectile.x, projectile.y))))
@@ -118,6 +119,7 @@ class GameEngine:
             if self.settings['debug_mode']:
                 self.debug_window('Player x = ' + str(self.Player.x) + '   '
                                   'Player y = ' + str(self.Player.y))
+            self.score_overlay()
 
             # Game update
             pygame.display.update()
@@ -136,19 +138,23 @@ class GameEngine:
                     if event.key == pygame.K_ESCAPE:
                         self.close_program()
 
-            background = pygame.Surface(self.settings['window_size'])
+            window_size = self.settings['window_size']
+            window_x = window_size[0]
+            window_y = window_size[1]
+            background = pygame.Surface(window_size)
             background.fill((0, 0, 0))
             game_over_font = pygame.font.SysFont(self.settings['game_font'], size=30)
-            text_surf = game_over_font.render('Game over!',
-                                              False, (255, 255, 255))
-            background.blit(text_surf, (self.settings['window_size'][0] / 2 - 100,
-                                        self.settings['window_size'][1] / 2))
-            text_surf = game_over_font.render('Press r to restart or escape to exit!',
-                                              False, (255, 255, 255))
-            background.blit(text_surf, (self.settings['window_size'][0] / 2 - 150,
-                                        self.settings['window_size'][1] / 2 + 50))
-            self.window.blit(background, (0, 0))
 
+            text_surf = game_over_font.render('Game over!', False, (255, 255, 255))
+            background.blit(text_surf, (window_x / 2 - 100, window_y / 2))
+
+            text_surf = game_over_font.render('Press r to restart or escape to exit!', False, (255, 255, 255))
+            background.blit(text_surf, (window_x / 2 - 150, window_y / 2 + 50))
+
+            text_surf = game_over_font.render('Your score was ' + str(self.score), False, (255, 255, 255))
+            background.blit(text_surf, (window_x / 2 - 150, window_y / 2 + 75))
+
+            self.window.blit(background, (0, 0))
             pygame.display.update()
             self.FPS_clock.tick(self.settings['FPS'])
 
@@ -190,6 +196,14 @@ class GameEngine:
         self.window.blit(debug_box, (self.settings['window_size'][0] - box_size[0],
                                      self.settings['window_size'][1] - box_size[1]))
 
+    def score_overlay(self):
+        score_bar = pygame.Surface((self.settings['window_size'][0], 25))
+        score_bar.fill((255, 255, 255))
+        score_font = pygame.font.SysFont(self.settings['game_font'], size=18)
+        score_text = score_font.render('Current score: ' + str(self.score), False, (0, 0, 0))
+        score_bar.blit(score_text, (10,2))
+        self.window.blit(score_bar, (0, 0))
+
 
 if __name__ == '__main__':
 
@@ -203,4 +217,3 @@ if __name__ == '__main__':
                 'number_of_enemies': 20,
                 'game_font': 'Arial'}
     game = GameEngine(settings)
-    game.start_game()
