@@ -120,6 +120,7 @@ def game_loop():
                 if projectile.check_hits(entity):
                     if projectile.shooter == str(Player): # only allow player to hit enemies
                         entity.hit = True
+                        random.choice(enemy_kill_sfx).play()
                         print(str(entity) + ' hit by ' + str(projectile))
             if projectile.within_active_area(Camera):
                 window.blit(projectile.surface, (convert_to_screen_coordinates((projectile.x, projectile.y))))
@@ -141,6 +142,10 @@ if __name__ == '__main__':
 
     pygame.init()
     pygame.font.init()
+    pygame.mixer.init()
+    enemy_kill_sfx = [pygame.mixer.Sound('Assets/Sound effects/ogg/Explosion 1.ogg'),
+                      pygame.mixer.Sound('Assets/Sound effects/ogg/Explosion 2.ogg'),
+                      pygame.mixer.Sound('Assets/Sound effects/ogg/Explosion 3.ogg')]
     FPS_clock = pygame.time.Clock()
     window = pygame.display.set_mode(window_size)
     pygame.display.set_caption('Flyover')
