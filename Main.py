@@ -132,7 +132,7 @@ class GameEngine:
                 # Key bindings
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_r:
-                        self.game_loop()
+                        self.start_game()
                     if event.key == pygame.K_ESCAPE:
                         self.close_program()
 
