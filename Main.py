@@ -48,6 +48,8 @@ class GameEngine:
                 if event.type == pygame.QUIT:
                     self.close_program()
 
+                self.Player.state = 'level'
+
                 # Key bindings
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_UP:
@@ -56,8 +58,10 @@ class GameEngine:
                         self.Player.accelerate(-1)
                     if event.key == pygame.K_LEFT:
                         self.Player.rotate(-1)
+                        self.Player.state = 'left'
                     if event.key == pygame.K_RIGHT:
                         self.Player.rotate(1)
+                        self.Player.state = 'right'
                     if event.key == pygame.K_ESCAPE:
                         self.close_program()
                     if event.key == pygame.K_SPACE:
@@ -67,7 +71,14 @@ class GameEngine:
             # Player update
             self.Player.move()
             self.reset_screen(self.map)
-            player_sprite = pygame.transform.rotate(self.Player.sprite, self.Player.angle * -1)
+            if self.Player.state == 'level':
+                sprite = self.Player.sprite_level
+            elif self.Player.state == 'right':
+                sprite = self.Player.sprite_right
+            elif self.Player.state == 'left':
+                sprite = self.Player.sprite_left
+
+            player_sprite = pygame.transform.rotate(sprite, self.Player.angle * -1)
             self.window.blit(player_sprite, (int(self.settings['window_size'][0] / 2),
                                              int(self.settings['window_size'][1] / 2)))
 

@@ -135,7 +135,10 @@ class Jet:
 class Player(Jet):
     def __init__(self, starting_coordinates, map_size):
         Jet.__init__(self, starting_coordinates, map_size)
-        self.sprite = pygame.image.load('Assets/Sprites/Plane.png')
+        self.sprite_level = pygame.image.load('Assets/Sprites/player.png')
+        self.sprite_left = pygame.image.load('Assets/Sprites/player_left.png')
+        self.sprite_right = pygame.image.load('Assets/Sprites/player_right.png')
+        self.state = 'level'
 
     def __str__(self):
         return 'Player'
