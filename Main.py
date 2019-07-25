@@ -3,6 +3,7 @@ import sys
 import MapGenerator
 import Entities
 import random
+import os
 
 FPS = 30
 window_size = (800,600)
@@ -58,9 +59,39 @@ def close_program():
     pygame.quit()
     sys.exit()
 
+def game_over_screen():
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                close_program()
+
+            # Key bindings
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_r:
+                    game_loop()
+                if event.key == pygame.K_ESCAPE:
+                    close_program()
+
+        background = pygame.Surface(window_size)
+        background.fill((0, 0, 0))
+        game_over_font = pygame.font.SysFont(game_font, size=30)
+        text_surf = game_over_font.render('Game over!',
+                                          False, (255, 255, 255))
+        background.blit(text_surf, (window_size[0] / 2 - 100, window_size[1] / 2))
+        text_surf = game_over_font.render('Press r to restart or escape to exit!',
+                                          False, (255, 255, 255))
+        background.blit(text_surf, (window_size[0] / 2 - 150, window_size[1] / 2 + 50))
+        window.blit(background, (0,0))
+
+        pygame.display.update()
+        FPS_clock.tick(FPS)
+
 
 def game_loop():
+    game_over = False
     while True:
+        if game_over:
+            game_over_screen()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 close_program()
@@ -116,14 +147,16 @@ def game_loop():
         # Check player hits
             if projectile.check_hits(Player):
                 if projectile.shooter != str(Player):
-                    print('Player hit by ' + str(projectile))
+                    death_sfx.play()
+                    game_over = True
+                    # print('Player hit by ' + str(projectile))
         # Check enemy hits
             for entity in entities:
                 if projectile.check_hits(entity):
                     if projectile.shooter == str(Player): # only allow player to hit enemies
                         entity.hit = True
                         random.choice(enemy_kill_sfx).play()
-                        print(str(entity) + ' hit by ' + str(projectile))
+                        # print(str(entity) + ' hit by ' + str(projectile))
             if projectile.within_active_area(Camera):
                 window.blit(projectile.surface, (convert_to_screen_coordinates((projectile.x, projectile.y))))
 
@@ -141,7 +174,8 @@ def game_loop():
 
 
 if __name__ == '__main__':
-
+    x,y = 400, 50 # coordinates window is drawn at
+    os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (x, y)
     pygame.init()
     pygame.font.init()
     pygame.mixer.init()
@@ -151,7 +185,7 @@ if __name__ == '__main__':
     shooting_sfx = [pygame.mixer.Sound('Assets/Sound effects/ogg/Shooting 1.ogg'),
                     pygame.mixer.Sound('Assets/Sound effects/ogg/Shooting 2.ogg'),
                     pygame.mixer.Sound('Assets/Sound effects/ogg/Shooting 3.ogg')]
-    death_sfx = pygame.mixer.Sound('Assets/Sound effects/ogg/Player death.ogg'),
+    death_sfx = pygame.mixer.Sound('Assets/Sound effects/ogg/Player death.ogg')
     FPS_clock = pygame.time.Clock()
     window = pygame.display.set_mode(window_size)
     pygame.display.set_caption('Flyover')
