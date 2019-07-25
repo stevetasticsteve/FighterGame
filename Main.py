@@ -118,8 +118,9 @@ def game_loop():
         # Check enemy hits
             for entity in entities:
                 if projectile.check_hits(entity):
-                    entity.hit = True
-                    print(str(entity) + ' hit by ' + str(projectile))
+                    if projectile.shooter == str(Player): # only allow player to hit enemies
+                        entity.hit = True
+                        print(str(entity) + ' hit by ' + str(projectile))
             if projectile.within_active_area(Camera):
                 window.blit(projectile.surface, (convert_to_screen_coordinates((projectile.x, projectile.y))))
 
