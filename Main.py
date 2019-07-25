@@ -79,6 +79,7 @@ def game_loop():
                     close_program()
                 if event.key == pygame.K_SPACE:
                     projectiles.append(Player.shoot_missile())
+                    random.choice(shooting_sfx).play()
 
         # Player update
         Player.move()
@@ -97,6 +98,7 @@ def game_loop():
             shoot = entity.check_sights(Player)
             if shoot:
                 projectiles.append(shoot)
+                random.choice(shooting_sfx).play()
 
 
             # Draw enemies
@@ -146,6 +148,10 @@ if __name__ == '__main__':
     enemy_kill_sfx = [pygame.mixer.Sound('Assets/Sound effects/ogg/Explosion 1.ogg'),
                       pygame.mixer.Sound('Assets/Sound effects/ogg/Explosion 2.ogg'),
                       pygame.mixer.Sound('Assets/Sound effects/ogg/Explosion 3.ogg')]
+    shooting_sfx = [pygame.mixer.Sound('Assets/Sound effects/ogg/Shooting 1.ogg'),
+                    pygame.mixer.Sound('Assets/Sound effects/ogg/Shooting 2.ogg'),
+                    pygame.mixer.Sound('Assets/Sound effects/ogg/Shooting 3.ogg')]
+    death_sfx = pygame.mixer.Sound('Assets/Sound effects/ogg/Player death.ogg'),
     FPS_clock = pygame.time.Clock()
     window = pygame.display.set_mode(window_size)
     pygame.display.set_caption('Flyover')
