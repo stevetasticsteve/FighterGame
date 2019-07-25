@@ -31,7 +31,7 @@ def create_entities():
         x = random.randint(0,map_size[0])
         y = random.randint(0, map_size[1])
         angle = random.randint(0, 359)
-        entities.append(Entities.Enemy((x, y, angle)))
+        entities.append(Entities.Enemy((x, y, angle),map_size))
     return entities
 
 
@@ -128,7 +128,8 @@ def game_loop():
 
         #UI
         if debug_mode:
-            debug_window('Target angle = ' + str(entities[0].player_angle(Player)))
+            debug_window('Player x = ' + str(Player.x) + '   '
+                         'Player y = ' +str(Player.y))
 
         # Game update
         pygame.display.update()
@@ -144,7 +145,7 @@ if __name__ == '__main__':
     pygame.display.set_caption('Flyover')
     pygame.key.set_repeat(10) # Enables direction button to be held
     map = MapGenerator.map(map_size)
-    Player = Entities.Player((int(window_size[0]/2), int(window_size[1]/2), 180))
+    Player = Entities.Player((int(window_size[0]/2), int(window_size[1]/2), 180), map_size)
     entities = create_entities()
     projectiles = []
     Camera = Entities.Camera(Player, window_size, map)

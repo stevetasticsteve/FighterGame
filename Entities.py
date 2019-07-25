@@ -18,6 +18,7 @@ class Camera:
                      self.player.collision_box.centerx + int(self.camera_width/2),
                      self.player.collision_box.centery + int(self.camera_height/2))
 
+
     def Active_tiles(self):
         # returns a list of tile tuples(x,y,img) that are currently around the player
         # and within the range of the camera
@@ -37,7 +38,7 @@ class Jet:
     minimum_speed = 2
     sprite_size = (64, 64)
 
-    def __init__(self, starting_coordinates):
+    def __init__(self, starting_coordinates, map_size):
         self.angle = starting_coordinates[2]
         # x and y = center of entity, blitx and blity = top left corner
         # angle defined as 0 degrees North, 90 deg East etc.
@@ -47,6 +48,7 @@ class Jet:
                                          (self.sprite_size[0]/2, self.sprite_size[1]/2))
         # initialise game and blit coordinates
         self.update_coordinates()
+        self.map_size = map_size
 
     def update_coordinates(self):
         # Draw x and draw y give the top left of the sprite - the coordinates passed to blit
@@ -55,6 +57,16 @@ class Jet:
         self.x = self.collision_box.centerx
         self.y = self.collision_box.centery
         self.coord = (self.x, self.y)
+
+    def stay_within_map(self):
+        if self.x <= 0:
+            self.angle = 90
+        if self.y <= 0:
+            self.angle = 180
+        if self.x >= self.map_size[0]:
+            self.angle = 270
+        if self.y >= self.map_size[1]:
+            self.angle = 0
 
     def within_active_area(self, Camera):
         if self.x in range (Camera.rect[0], Camera.rect[2]):
@@ -67,6 +79,7 @@ class Jet:
         y_diff = int(self.speed * math.cos(math.radians(self.angle)))*-1
         self.collision_box.move_ip(x_diff, y_diff)
         self.update_coordinates()
+        self.stay_within_map()
 
     def normalize_angle(self, angle):
         if angle < 0:
@@ -115,13 +128,13 @@ class Jet:
         return dist, x_diff, y_diff
 
     def shoot_missile(self):
-        return Missile((self.x, self.y, self.angle), str(self))
+        return Missile((self.x, self.y, self.angle), str(self), self.map_size)
 
 
 
 class Player(Jet):
-    def __init__(self, starting_coordinates):
-        Jet.__init__(self, starting_coordinates)
+    def __init__(self, starting_coordinates, map_size):
+        Jet.__init__(self, starting_coordinates, map_size)
         self.sprite = pygame.image.load('Assets/Sprites/Plane.png')
 
     def __str__(self):
@@ -129,8 +142,8 @@ class Player(Jet):
 
 
 class Enemy(Jet):
-    def __init__(self, starting_coordinates):
-        Jet.__init__(self, starting_coordinates)
+    def __init__(self, starting_coordinates, map_size):
+        Jet.__init__(self, starting_coordinates, map_size)
         self.sprite = pygame.image.load('Assets/Sprites/Enemy.png')
         self.behaviours = (self.turn_left,self.turn_right, self.do_nothing,
                            self.speed_up, self.slow_down, self.follow_player)
@@ -217,8 +230,8 @@ class Missile(Jet):
     # Todo player gets hit by his own missiles when launched. Might happen to enemies too
     speed = Jet.maximum_speed + 2
     fuse = 30
-    def __init__(self, starting_coordinates, shooter):
-        Jet.__init__(self, starting_coordinates)
+    def __init__(self, starting_coordinates, map_size, shooter):
+        Jet.__init__(self, starting_coordinates, map_size)
         self.x = starting_coordinates[0] + 32 # start in sprite's center
         self.y = starting_coordinates[1] + 32
         self.angle = starting_coordinates[2]
