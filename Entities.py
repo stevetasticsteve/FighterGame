@@ -181,14 +181,18 @@ class Enemy(Jet):
         self.last_behaviour = self.behaviour
 
     def turn_left(self, **kwargs):
-        self.state = 'left'
         if self.last_behaviour_time < self.behaviour_duration:
             self.rotate(-1)
+            self.state = 'left'
+        else:
+            self.state = 'level'
 
     def turn_right(self, **kwargs):
-        self.state = 'right'
         if self.last_behaviour_time < self.behaviour_duration:
             self.rotate(1)
+            self.state = 'right'
+        else:
+            self.state = 'level'
 
     def slow_down(self, **kwargs):
         self.state = 'level'
@@ -236,7 +240,7 @@ class Enemy(Jet):
 
 class Missile(Jet):
     # Todo player gets hit by his own missiles when launched. Might happen to enemies too
-    speed = Jet.maximum_speed + 2
+    speed = Jet.maximum_speed + 10
     fuse = 30
     def __init__(self, starting_coordinates, shooter, map_size):
         Jet.__init__(self, starting_coordinates, map_size)

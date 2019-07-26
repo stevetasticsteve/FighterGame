@@ -230,8 +230,8 @@ class GameEngine:
 if __name__ == '__main__':
 
     settings = {'FPS': 30,
-                'window_size': (1300,700),
-                'window_position' : (100,50),
+                'window_size': (1200,600),
+                'window_position' : (50,50),
                 'map_size': (6500,4000),
                 'player_start': (100,100),
                 'debug_mode': False,
