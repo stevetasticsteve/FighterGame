@@ -49,6 +49,8 @@ class Jet:
         # initialise game and blit coordinates
         self.update_coordinates()
         self.map_size = map_size
+        self.state = 'level'
+
 
     def update_coordinates(self):
         # Draw x and draw y give the top left of the sprite - the coordinates passed to blit
@@ -138,7 +140,6 @@ class Player(Jet):
         self.sprite_level = pygame.image.load('Assets/Sprites/player.png')
         self.sprite_left = pygame.image.load('Assets/Sprites/player_left.png')
         self.sprite_right = pygame.image.load('Assets/Sprites/player_right.png')
-        self.state = 'level'
 
     def __str__(self):
         return 'Player'
@@ -147,7 +148,6 @@ class Player(Jet):
 class Enemy(Jet):
     def __init__(self, starting_coordinates, map_size):
         Jet.__init__(self, starting_coordinates, map_size)
-        self.sprite = pygame.image.load('Assets/Sprites/Enemy.png')
         self.behaviours = (self.turn_left,self.turn_right, self.do_nothing,
                            self.speed_up, self.slow_down, self.follow_player)
         self.speed = 2
@@ -181,18 +181,22 @@ class Enemy(Jet):
         self.last_behaviour = self.behaviour
 
     def turn_left(self, **kwargs):
+        self.state = 'left'
         if self.last_behaviour_time < self.behaviour_duration:
             self.rotate(-1)
 
     def turn_right(self, **kwargs):
+        self.state = 'right'
         if self.last_behaviour_time < self.behaviour_duration:
             self.rotate(1)
 
     def slow_down(self, **kwargs):
+        self.state = 'level'
         if self.last_behaviour_time < int(self.behaviour_duration/10):  # /10 to avoid hitting min/max speed in one go
             self.accelerate(-1)
 
     def speed_up(self, **kwargs):
+        self.state = 'level'
         if self.last_behaviour_time < int(self.behaviour_duration/10):
             self.accelerate(1)
 
@@ -220,6 +224,7 @@ class Enemy(Jet):
 
 
     def do_nothing(self, **kwargs):
+        self.state = 'level'
         pass
 
     def check_sights(self, player):
@@ -267,3 +272,18 @@ class Missile(Jet):
     def stay_within_map(self):
         pass
 
+
+class Mig35(Enemy):
+    def __init__(self, starting_coordinates, map_size):
+        Enemy.__init__(self, starting_coordinates, map_size)
+        self.sprite_level = pygame.image.load('Assets/Sprites/Mig35.png')
+        self.sprite_left = pygame.image.load('Assets/Sprites/Mig35_left.png')
+        self.sprite_right = pygame.image.load('Assets/Sprites/Mig35_right.png')
+
+
+class Mig21(Enemy):
+    def __init__(self, starting_coordinates, map_size):
+        Enemy.__init__(self, starting_coordinates, map_size)
+        self.sprite_level = pygame.image.load('Assets/Sprites/Mig21.png')
+        self.sprite_left = pygame.image.load('Assets/Sprites/Mig21_left.png')
+        self.sprite_right = pygame.image.load('Assets/Sprites/Mig21_right.png')

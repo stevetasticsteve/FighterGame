@@ -97,7 +97,13 @@ class GameEngine:
 
                 # Draw enemies
                 if entity.within_active_area(self.Camera):
-                    enemy_sprite = pygame.transform.rotate(entity.sprite, entity.angle * -1)
+                    if entity.state == 'right':
+                        enemy_sprite = pygame.transform.rotate(entity.sprite_right, entity.angle * -1)
+                    elif entity.state == 'left':
+                        enemy_sprite = pygame.transform.rotate(entity.sprite_left, entity.angle * -1)
+                    else:
+                        enemy_sprite = pygame.transform.rotate(entity.sprite_level, entity.angle * -1)
+
                     self.window.blit(enemy_sprite, (self.convert_to_screen_coordinates
                                                     ((entity.blit_x, entity.blit_y))))
 
@@ -111,7 +117,8 @@ class GameEngine:
                 if projectile.check_hits(self.Player):
                     if projectile.shooter != str(self.Player):
                         self.death_sfx.play()
-                        game_over = True
+                        if not self.settings['invulnerable']:
+                            game_over = True
                 # Check enemy hits
                 for entity in self.entities:
                     if projectile.check_hits(entity):
@@ -188,7 +195,11 @@ class GameEngine:
             x = random.randint(0, self.settings['map_size'][0])
             y = random.randint(0, self.settings['map_size'][1])
             angle = random.randint(0, 359)
-            entities.append(Entities.Enemy((x, y, angle), self.settings['map_size']))
+            aircraft = random.choice(['Mig21', 'Mig35'])
+            if aircraft == 'Mig21':
+                entities.append(Entities.Mig21((x, y, angle), self.settings['map_size']))
+            elif aircraft == 'Mig35':
+                entities.append(Entities.Mig35((x, y, angle), self.settings['map_size']))
         return entities
 
     def convert_to_screen_coordinates(self, coord):
@@ -219,12 +230,13 @@ class GameEngine:
 if __name__ == '__main__':
 
     settings = {'FPS': 30,
-                'window_size': (800,600),
-                'window_position' : (400,50),
-                'map_size': (1000,800),
+                'window_size': (1300,700),
+                'window_position' : (100,50),
+                'map_size': (6500,4000),
                 'player_start': (100,100),
                 'debug_mode': False,
                 'enemy_behaviour_time': 1.5,
                 'number_of_enemies': 20,
-                'game_font': 'Arial'}
+                'game_font': 'Arial',
+                'invulnerable' : True}
     game = GameEngine(settings)
