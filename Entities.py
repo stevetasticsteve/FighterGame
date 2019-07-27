@@ -239,13 +239,12 @@ class Enemy(Jet):
                 return self.shoot_missile()
 
 class Missile(Jet):
-    # Todo player gets hit by his own missiles when launched. Might happen to enemies too
     speed = Jet.maximum_speed + 10
-    fuse = 30
+    fuse = 20
     def __init__(self, starting_coordinates, shooter, map_size):
         Jet.__init__(self, starting_coordinates, map_size)
-        self.x = starting_coordinates[0] + 32 # start in sprite's center
-        self.y = starting_coordinates[1] + 32
+        self.x = starting_coordinates[0]# start in sprite's center
+        self.y = starting_coordinates[1]
         self.angle = starting_coordinates[2]
         self.shooter = shooter
         self.time_alive = 0

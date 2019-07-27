@@ -79,8 +79,8 @@ class GameEngine:
                 sprite = self.Player.sprite_left
 
             player_sprite = pygame.transform.rotate(sprite, self.Player.angle * -1)
-            self.window.blit(player_sprite, (int(self.settings['window_size'][0] / 2),
-                                             int(self.settings['window_size'][1] / 2)))
+            self.window.blit(player_sprite, (int(self.settings['window_size'][0] / 2 -32),
+                                             int(self.settings['window_size'][1] / 2 -32)))
 
             # Enemy updates
             for entity in self.entities:
@@ -236,7 +236,7 @@ if __name__ == '__main__':
                 'player_start': (100,100),
                 'debug_mode': False,
                 'enemy_behaviour_time': 1.5,
-                'number_of_enemies': 20,
+                'number_of_enemies': 50,
                 'game_font': 'Arial',
                 'invulnerable' : True}
     game = GameEngine(settings)
