@@ -40,24 +40,15 @@ class GameEngine:
         self.score = 0
         self.game_loop()
 
-    def loading_screen(self):
-        window_size = self.settings['window_size']
-        window_x = window_size[0]
-        window_y = window_size[1]
-        background = pygame.Surface(window_size)
-        background.fill((0, 0, 0))
-        game_over_font = pygame.font.SysFont(self.settings['game_font'], size=30)
 
-        text_surf = game_over_font.render('Loading', False, (255, 255, 255))
-        background.blit(text_surf, (window_x / 2 - 100, window_y / 2))
-        self.window.blit(background, (0,0))
-        pygame.display.update()
 
     def game_loop(self):
         game_over = False
         while True:
             if game_over:
                 self.game_over_screen()
+            if self.score == self.settings['number_of_enemies'] * 10:
+                self.victory_screen()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.close_program()
@@ -156,6 +147,53 @@ class GameEngine:
             # Game update
             pygame.display.update()
             self.FPS_clock.tick(self.settings['FPS'])
+
+    def loading_screen(self):
+        window_size = self.settings['window_size']
+        window_x = window_size[0]
+        window_y = window_size[1]
+        background = pygame.Surface(window_size)
+        background.fill((0, 0, 0))
+        game_over_font = pygame.font.SysFont(self.settings['game_font'], size=30)
+
+        text_surf = game_over_font.render('Loading', False, (255, 255, 255))
+        background.blit(text_surf, (window_x / 2 - 100, window_y / 2))
+        self.window.blit(background, (0,0))
+        pygame.display.update()
+
+    def victory_screen(self):
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.close_program()
+
+                # Key bindings
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_r:
+                        self.start_game()
+                    if event.key == pygame.K_ESCAPE:
+                        self.close_program()
+
+            window_size = self.settings['window_size']
+            window_x = window_size[0]
+            window_y = window_size[1]
+            background = pygame.Surface(window_size)
+            background.fill((0, 0, 0))
+            game_over_font = pygame.font.SysFont(self.settings['game_font'], size=30)
+
+            text_surf = game_over_font.render('You shot down all the planes, you win!', False, (255, 255, 255))
+            background.blit(text_surf, (window_x / 2 - 100, window_y / 2))
+
+            text_surf = game_over_font.render('Press r to restart or escape to exit!', False, (255, 255, 255))
+            background.blit(text_surf, (window_x / 2 - 150, window_y / 2 + 50))
+
+            text_surf = game_over_font.render('Your score was ' + str(self.score), False, (255, 255, 255))
+            background.blit(text_surf, (window_x / 2 - 150, window_y / 2 + 75))
+
+            self.window.blit(background, (0, 0))
+            pygame.display.update()
+            self.FPS_clock.tick(self.settings['FPS'])
+
 
     def game_over_screen(self):
         while True:
