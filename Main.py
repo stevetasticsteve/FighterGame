@@ -27,6 +27,7 @@ class GameEngine:
         self.start_game()
 
     def start_game(self):
+        self.loading_screen()
         self.map = MapGenerator.map(self.settings['map_size'])
         self.Player = Entities.Player((int(self.settings['window_size'][0] / 2),
                                        int(self.settings['window_size'][1] / 2),
@@ -38,6 +39,19 @@ class GameEngine:
                                       self.map)
         self.score = 0
         self.game_loop()
+
+    def loading_screen(self):
+        window_size = self.settings['window_size']
+        window_x = window_size[0]
+        window_y = window_size[1]
+        background = pygame.Surface(window_size)
+        background.fill((0, 0, 0))
+        game_over_font = pygame.font.SysFont(self.settings['game_font'], size=30)
+
+        text_surf = game_over_font.render('Loading', False, (255, 255, 255))
+        background.blit(text_surf, (window_x / 2 - 100, window_y / 2))
+        self.window.blit(background, (0,0))
+        pygame.display.update()
 
     def game_loop(self):
         game_over = False
@@ -238,5 +252,5 @@ if __name__ == '__main__':
                 'enemy_behaviour_time': 1.5,
                 'number_of_enemies': 50,
                 'game_font': 'Arial',
-                'invulnerable' : True}
+                'invulnerable' : False}
     game = GameEngine(settings)
