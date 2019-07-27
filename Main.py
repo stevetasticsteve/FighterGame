@@ -5,6 +5,7 @@ import Entities
 import random
 import os
 
+
 class GameEngine:
     def __init__(self, settings):
         self.settings = settings
@@ -28,7 +29,7 @@ class GameEngine:
 
     def start_game(self):
         self.loading_screen()
-        self.map = MapGenerator.map(self.settings['map_size'])
+        self.map = MapGenerator.Map(self.settings['map_size'])
         self.Player = Entities.Player((int(self.settings['window_size'][0] / 2),
                                        int(self.settings['window_size'][1] / 2),
                                        180),
@@ -39,8 +40,6 @@ class GameEngine:
                                       self.map)
         self.score = 0
         self.game_loop()
-
-
 
     def game_loop(self):
         game_over = False
@@ -56,7 +55,7 @@ class GameEngine:
                 self.Player.state = 'level'
 
                 # Key bindings
-                #todo can't press two keys at once, like turn and fire at the same time
+                # todo can't press two keys at once, like turn and fire at the same time
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_UP:
                         self.Player.accelerate(1)
@@ -76,17 +75,17 @@ class GameEngine:
 
             # Player update
             self.Player.move()
-            self.reset_screen(self.map)
-            if self.Player.state == 'level':
-                sprite = self.Player.sprite_level
-            elif self.Player.state == 'right':
+            self.reset_screen()
+            if self.Player.state == 'right':
                 sprite = self.Player.sprite_right
             elif self.Player.state == 'left':
                 sprite = self.Player.sprite_left
+            else:
+                sprite = self.Player.sprite_level
 
             player_sprite = pygame.transform.rotate(sprite, self.Player.angle * -1)
-            self.window.blit(player_sprite, (int(self.settings['window_size'][0] / 2 -32),
-                                             int(self.settings['window_size'][1] / 2 -32)))
+            self.window.blit(player_sprite, (int(self.settings['window_size'][0] / 2 - 32),
+                                             int(self.settings['window_size'][1] / 2 - 32)))
 
             # Enemy updates
             for entity in self.entities:
@@ -134,15 +133,15 @@ class GameEngine:
                             self.score += 10
                 if projectile.within_active_area(self.Camera):
                     self.window.blit(projectile.surface,
-                                (self.convert_to_screen_coordinates((projectile.x, projectile.y))))
+                                     (self.convert_to_screen_coordinates((projectile.x, projectile.y))))
 
-            # delete hit enemies
+                    # delete hit enemies
                     self.entities[:] = [entity for entity in self.entities if not entity.hit]
 
             # UI
             if self.settings['debug_mode']:
                 self.debug_window('Player x = ' + str(self.Player.x) + '   '
-                                  'Player y = ' + str(self.Player.y))
+                                                                       'Player y = ' + str(self.Player.y))
             self.score_overlay()
 
             # Game update
@@ -159,7 +158,7 @@ class GameEngine:
 
         text_surf = game_over_font.render('Loading', False, (255, 255, 255))
         background.blit(text_surf, (window_x / 2 - 100, window_y / 2))
-        self.window.blit(background, (0,0))
+        self.window.blit(background, (0, 0))
         pygame.display.update()
 
     def victory_screen(self):
@@ -194,7 +193,6 @@ class GameEngine:
             self.window.blit(background, (0, 0))
             pygame.display.update()
             self.FPS_clock.tick(self.settings['FPS'])
-
 
     def game_over_screen(self):
         while True:
@@ -233,10 +231,10 @@ class GameEngine:
         pygame.quit()
         sys.exit()
 
-    def reset_screen(self, map):
-        self.window.fill((0,0,0))
-        self.Camera.Move()
-        background = self.Camera.Active_tiles()
+    def reset_screen(self):
+        self.window.fill((0, 0, 0))
+        self.Camera.move()
+        background = self.Camera.active_tiles()
         for tile in background:
             # Need to turn game coordinates into screen coordinates relative to the player
             screen_coord = self.convert_to_screen_coordinates((tile[0][0], tile[0][1]))
@@ -259,7 +257,7 @@ class GameEngine:
         # takes game coordinates and converts it to screen (pixel) coordinates for blitting
         screen_x = coord[0] - self.Camera.rect[0]
         screen_y = coord[1] - self.Camera.rect[1]
-        return (screen_x, screen_y)
+        return screen_x, screen_y
 
     def debug_window(self, content):
         box_size = (200, 100)
@@ -276,20 +274,19 @@ class GameEngine:
         score_bar.fill((255, 255, 255))
         score_font = pygame.font.SysFont(self.settings['game_font'], size=18)
         score_text = score_font.render('Current score: ' + str(self.score), False, (0, 0, 0))
-        score_bar.blit(score_text, (10,2))
+        score_bar.blit(score_text, (10, 2))
         self.window.blit(score_bar, (0, 0))
 
 
 if __name__ == '__main__':
-
     settings = {'FPS': 30,
-                'window_size': (1200,600),
-                'window_position' : (50,50),
-                'map_size': (6500,4000),
-                'player_start': (100,100),
+                'window_size': (1200, 600),
+                'window_position': (50, 50),
+                'map_size': (6500, 4000),
+                'player_start': (100, 100),
                 'debug_mode': False,
                 'enemy_behaviour_time': 1.5,
                 'number_of_enemies': 50,
                 'game_font': 'Arial',
-                'invulnerable' : False}
+                'invulnerable': False}
     game = GameEngine(settings)
