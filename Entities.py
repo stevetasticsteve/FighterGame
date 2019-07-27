@@ -32,7 +32,7 @@ class Camera:
 
 class Jet:
     speed = 2
-    acceleration = 2
+    acceleration = 1
     rotation_speed = 5
     maximum_speed = 20
     minimum_speed = 2

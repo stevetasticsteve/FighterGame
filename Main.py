@@ -56,6 +56,7 @@ class GameEngine:
                 self.Player.state = 'level'
 
                 # Key bindings
+                #todo can't press two keys at once, like turn and fire at the same time
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_UP:
                         self.Player.accelerate(1)

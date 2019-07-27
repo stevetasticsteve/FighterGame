@@ -2,6 +2,7 @@ import unittest
 import Entities
 import pygame
 
+#todo tests totally broken since I switch to GameEngine class
 
 class TestEntities(unittest.TestCase):
     def setUp(self):
