@@ -18,7 +18,7 @@ Created to explore scrolling maps, and Class inheritance. The shell of a game is
 
 ## Features
 - Tiled map (entities bounce off the map edge)
-- Player plane centered in screen
+- Player plane centred in screen
 - Enemy planes with basic AI
 - Sound effects
 
@@ -29,8 +29,8 @@ Created to explore scrolling maps, and Class inheritance. The shell of a game is
 ## Ideas for more features
 - Player health (not a 1 hit kill system)
 - High score system
-- Different turning speeds for different airplane speeds
+- Different turning speeds for different plane speeds
 - Limited fuel and ammo, restock at a base
-- Background mussic
+- Background music
 - Mini map
 - Static defences with homing missiles
