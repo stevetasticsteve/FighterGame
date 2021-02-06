@@ -5,6 +5,8 @@ A simple pygame game implementing a 2D scrolling map.
 
 Created to explore scrolling maps, and Class inheritance. The shell of a game is complete and there's lots of room for improvement.
 
+![Flyover screenshot](https://raw.githubusercontent.com/stevetasticsteve/Flyover/master/Assets/flyover_screenshot.png)
+
 ## Installation
 - Download the code
 - pip install pygame
