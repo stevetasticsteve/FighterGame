@@ -1,9 +1,12 @@
-import pygame
 import sys
-import MapGenerator
-import Entities
 import random
 import os
+from importlib import resources
+
+import pygame
+
+import flyover.MapGenerator as MapGenerator
+import flyover.Entities as Entities
 
 
 class GameEngine:
@@ -14,13 +17,20 @@ class GameEngine:
         pygame.init()
         pygame.font.init()
         pygame.mixer.init()
-        self.enemy_kill_sfx = [pygame.mixer.Sound('Assets/Sound effects/ogg/Explosion 1.ogg'),
-                               pygame.mixer.Sound('Assets/Sound effects/ogg/Explosion 2.ogg'),
-                               pygame.mixer.Sound('Assets/Sound effects/ogg/Explosion 3.ogg')]
-        self.shooting_sfx = [pygame.mixer.Sound('Assets/Sound effects/ogg/Shooting 1.ogg'),
-                             pygame.mixer.Sound('Assets/Sound effects/ogg/Shooting 2.ogg'),
-                             pygame.mixer.Sound('Assets/Sound effects/ogg/Shooting 3.ogg')]
-        self.death_sfx = pygame.mixer.Sound('Assets/Sound effects/ogg/Player death.ogg')
+
+        self.enemy_kill_sfx = []
+        for sound in ["explosion_1.ogg", "explosion_2.ogg", "explosion_3.ogg"]:
+            with resources.path("flyover.assets.sound_effects.ogg", sound) as path:
+                self.enemy_kill_sfx.append(pygame.mixer.Sound(path))
+
+        self.shooting_sfx = []
+        for sound in ["shooting_1.ogg", "shooting_2.ogg", "shooting_3.ogg"]:
+            with resources.path("flyover.assets.sound_effects.ogg", sound) as path:
+                self.shooting_sfx.append(pygame.mixer.Sound(path))
+
+        with resources.path("flyover.assets.sound_effects.ogg", "player_death.ogg") as path:
+            self.death_sfx = pygame.mixer.Sound(path)
+
         self.FPS_clock = pygame.time.Clock()
         self.window = pygame.display.set_mode(self.settings['window_size'])
         pygame.display.set_caption('Flyover')
@@ -277,8 +287,7 @@ class GameEngine:
         score_bar.blit(score_text, (10, 2))
         self.window.blit(score_bar, (0, 0))
 
-
-if __name__ == '__main__':
+def main():
     settings = {'FPS': 30,
                 'window_size': (1200, 600),
                 'window_position': (50, 50),
@@ -290,3 +299,7 @@ if __name__ == '__main__':
                 'game_font': 'Arial',
                 'invulnerable': False}
     game = GameEngine(settings)
+
+
+if __name__ == '__main__':
+    main()

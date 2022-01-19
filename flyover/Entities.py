@@ -1,7 +1,8 @@
-import pygame
 import math
 import random
+from importlib import resources
 
+import pygame
 
 class Camera:
     def __init__(self, player, window_size, map):
@@ -131,9 +132,12 @@ class Jet:
 class Player(Jet):
     def __init__(self, starting_coordinates, map_size):
         Jet.__init__(self, starting_coordinates, map_size)
-        self.sprite_level = pygame.image.load('Assets/Sprites/player.png')
-        self.sprite_left = pygame.image.load('Assets/Sprites/player_left.png')
-        self.sprite_right = pygame.image.load('Assets/Sprites/player_right.png')
+        with resources.path("flyover.assets.sprites", "player.png") as path:
+            self.sprite_level = pygame.image.load(path)
+        with resources.path("flyover.assets.sprites", "player_left.png") as path:
+            self.sprite_left = pygame.image.load(path)
+        with resources.path("flyover.assets.sprites", "player_right.png") as path:
+            self.sprite_right = pygame.image.load(path)
 
     def __str__(self):
         return 'Player'
@@ -274,14 +278,21 @@ class Missile(Jet):
 class Mig35(Enemy):
     def __init__(self, starting_coordinates, map_size):
         Enemy.__init__(self, starting_coordinates, map_size)
-        self.sprite_level = pygame.image.load('Assets/Sprites/Mig35.png')
-        self.sprite_left = pygame.image.load('Assets/Sprites/Mig35_left.png')
-        self.sprite_right = pygame.image.load('Assets/Sprites/Mig35_right.png')
+        with resources.path("flyover.assets.sprites", "Mig35.png") as path:
+            self.sprite_level = pygame.image.load(path)
+        with resources.path("flyover.assets.sprites", "Mig35_left.png") as path:
+            self.sprite_left = pygame.image.load(path)
+        with resources.path("flyover.assets.sprites", "Mig35_right.png") as path:
+            self.sprite_right = pygame.image.load(path)
+
 
 
 class Mig21(Enemy):
     def __init__(self, starting_coordinates, map_size):
         Enemy.__init__(self, starting_coordinates, map_size)
-        self.sprite_level = pygame.image.load('Assets/Sprites/Mig21.png')
-        self.sprite_left = pygame.image.load('Assets/Sprites/Mig21_left.png')
-        self.sprite_right = pygame.image.load('Assets/Sprites/Mig21_right.png')
+        with resources.path("flyover.assets.sprites", "Mig21.png") as path:
+            self.sprite_level = pygame.image.load(path)
+        with resources.path("flyover.assets.sprites", "Mig21_left.png") as path:
+            self.sprite_left = pygame.image.load(path)
+        with resources.path("flyover.assets.sprites", "Mig21_right.png") as path:
+            self.sprite_right = pygame.image.load(path)

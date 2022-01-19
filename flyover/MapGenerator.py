@@ -1,5 +1,6 @@
-import os
 import random
+from importlib import resources
+
 import pygame
 
 
@@ -8,7 +9,12 @@ class Map:
         self.tile_size = 64
         self.map_width = map_size[0]
         self.map_height = map_size[1]
-        self.tiles = ['Assets/Tiles/' + x for x in os.listdir('Assets/Tiles') if x.endswith('.png')]
+        self.tiles = []
+
+        with resources.path("flyover.assets.tiles", "Grass.png") as path:
+            self.tiles.append(path)
+        with resources.path("flyover.assets.tiles", "Sea.png") as path:
+            self.tiles.append(path)
 
         self.tile_map = []
         for column in range(0, self.map_width, self.tile_size):
